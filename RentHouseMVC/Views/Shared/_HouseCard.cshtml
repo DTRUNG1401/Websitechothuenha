@@ -1,0 +1,27 @@
+﻿@model RentHouseMVC.Models.House
+@{
+    string detailsUrl = Url.Action("Details", "House", new { id = Model.HouseId, area = "" });
+    bool available = Model.Status == HouseStatus.Available;
+}
+<div class="card house-card h-100 @(available ? "" : "is-rented")">
+    <a href="@detailsUrl" class="house-card-img ratio ratio-4x3" tabindex="-1">
+        <img src="@Url.HouseImage(Model.Image)" alt="@Model.Title" loading="lazy" />
+    </a>
+    <span class="badge house-status @DisplayHelper.HouseStatusCss(Model.Status)">
+        <i class="bi @(available ? "bi-check-circle" : "bi-lock")"></i> @Model.Status
+    </span>
+    @if (Model.Category != null)
+    {
+        <span class="badge house-category"><i class="bi @DisplayHelper.CategoryIcon(Model.Category.CatName)"></i> @Model.Category.CatName</span>
+    }
+    <div class="card-body d-flex flex-column">
+        <div class="house-price">@DisplayHelper.FormatPrice(Model.Price)</div>
+        <h3 class="house-title"><a href="@detailsUrl" class="stretched-link-title">@Model.Title</a></h3>
+        <p class="house-address"><i class="bi bi-geo-alt"></i> @Model.Address, @Model.District</p>
+        <div class="house-meta mt-auto">
+            <span title="Diện tích"><i class="bi bi-aspect-ratio"></i> @DisplayHelper.FormatAcreage(Model.Acreage)</span>
+            <span title="Số phòng ngủ"><i class="bi bi-door-closed"></i> @Model.Bedrooms PN</span>
+            <span title="Ngày đăng"><i class="bi bi-clock"></i> @DisplayHelper.TimeAgo(Model.PostedDate)</span>
+        </div>
+    </div>
+</div>

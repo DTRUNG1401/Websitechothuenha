@@ -1,0 +1,127 @@
+﻿@model RentHouseMVC.Models.ViewModels.HouseSearchViewModel
+@{
+    ViewBag.Title = "Tìm kiếm nhà cho thuê";
+    var results = Model.Results;
+}
+
+<section class="page-banner">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tìm kiếm</li>
+            </ol>
+        </nav>
+        <h1>Tìm kiếm nhà cho thuê</h1>
+        <p class="mb-0">Lọc theo từ khóa, quận, khoảng giá, diện tích, số phòng ngủ và sắp xếp theo ý bạn.</p>
+    </div>
+</section>
+
+<div class="container section pt-4">
+    <div class="row g-4">
+        <!-- ===== BỘ LỌC ===== -->
+        <aside class="col-lg-3">
+            <form action="@Url.Action("Search", "House")" method="get" class="filter-box" id="filterForm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 mb-0"><i class="bi bi-funnel me-1"></i>Bộ lọc</h2>
+                    @if (Model.HasFilter)
+                    {
+                        <a href="@Url.Action("Search", "House")" class="small text-danger text-decoration-none"><i class="bi bi-x-circle"></i> Xóa lọc</a>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label for="keyword" class="form-label">Từ khóa</label>
+                    <input type="text" id="keyword" name="keyword" value="@Model.Keyword" class="form-control" maxlength="100" placeholder="Tên đường, khu vực..." />
+                </div>
+
+                <div class="mb-3">
+                    <label for="catId" class="form-label">Loại nhà</label>
+                    <select id="catId" name="catId" class="form-select">
+                        <option value="">Tất cả</option>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c.Id" selected="@(Model.CatId == c.Id)">@c.CatName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="district" class="form-label">Quận / huyện</label>
+                    @Html.DropDownList("district", SearchOptions.DistrictItems(Model.District), "Tất cả", new { @class = "form-select", id = "district" })
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Khoảng giá</label>
+                    @Html.DropDownList("price", SearchOptions.PriceRangeItems(Model.Price), "Mọi mức giá", new { @class = "form-select", id = "price" })
+                </div>
+
+                <div class="mb-3">
+                    <label for="minAcreage" class="form-label">Diện tích tối thiểu</label>
+                    @Html.DropDownList("minAcreage", SearchOptions.AcreageItems(Model.MinAcreage), "Không giới hạn", new { @class = "form-select", id = "minAcreage" })
+                </div>
+
+                <div class="mb-3">
+                    <label for="bedrooms" class="form-label">Số phòng ngủ</label>
+                    @Html.DropDownList("bedrooms", SearchOptions.BedroomItems(Model.Bedrooms), "Không giới hạn", new { @class = "form-select", id = "bedrooms" })
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="onlyAvailable" name="onlyAvailable" value="true" checked="@Model.OnlyAvailable" />
+                    <label class="form-check-label" for="onlyAvailable">Chỉ hiện nhà còn trống</label>
+                </div>
+
+                <input type="hidden" name="sort" value="@Model.Sort" />
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Áp dụng</button>
+            </form>
+        </aside>
+
+        <!-- ===== KẾT QUẢ ===== -->
+        <div class="col-lg-9">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+                <p class="mb-0">
+                    Tìm thấy <strong class="text-primary">@results.TotalItemCount</strong> nhà
+                    @if (!string.IsNullOrWhiteSpace(Model.Keyword))
+                    {
+                        <span>cho từ khóa "<strong>@Model.Keyword</strong>"</span>
+                    }
+                </p>
+                <form action="@Url.Action("Search", "House")" method="get" class="d-flex align-items-center gap-2">
+                    @foreach (var item in Model.ToRouteValues(1))
+                    {
+                        if (item.Key != "sort")
+                        {
+                            <input type="hidden" name="@item.Key" value="@item.Value" />
+                        }
+                    }
+                    <label for="sort" class="small text-nowrap text-muted">Sắp xếp:</label>
+                    @Html.DropDownList("sort", SearchOptions.SortItems(Model.Sort), new { @class = "form-select form-select-sm", id = "sort", data_auto_submit = "true" })
+                    <noscript><button type="submit" class="btn btn-sm btn-outline-primary">Sắp xếp</button></noscript>
+                </form>
+            </div>
+
+            @if (results.TotalItemCount == 0)
+            {
+                <div class="empty-state">
+                    <i class="bi bi-search"></i>
+                    <p>Không tìm thấy nhà phù hợp. Hãy thử bỏ bớt điều kiện lọc.</p>
+                    <a href="@Url.Action("Search", "House")" class="btn btn-primary">Xóa bộ lọc</a>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var house in results)
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            @Html.Partial("_HouseCard", house)
+                        </div>
+                    }
+                </div>
+
+                @Html.Partial("_Pager", new PagerModel(results.PageNumber, results.PageCount,
+                    p => Url.Action("Search", "House", Model.ToRouteValues(p))))
+            }
+        </div>
+    </div>
+</div>

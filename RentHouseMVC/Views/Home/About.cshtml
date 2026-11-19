@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Giới thiệu";
+}
+
+<section class="page-banner">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Giới thiệu</li>
+            </ol>
+        </nav>
+        <h1>Giới thiệu về RentHouse</h1>
+        <p class="mb-0">Kết nối người cần thuê nhà với những căn nhà phù hợp tại TP.HCM.</p>
+    </div>
+</section>
+
+<div class="container section">
+    <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+            <span class="section-kicker">Chúng tôi là ai?</span>
+            <h2 class="mb-3">Website cho thuê nhà đơn giản, minh bạch</h2>
+            <p>
+                <strong>RentHouse</strong> là website đăng tin cho thuê nhà được xây dựng trong khuôn khổ đồ án môn
+                <em>Lập trình web</em>, sử dụng công nghệ ASP.NET MVC 5, Entity Framework 6 và SQL Server.
+            </p>
+            <p>
+                Khách hàng có thể xem danh sách nhà theo từng loại, tìm kiếm theo khu vực, mức giá, diện tích,
+                số phòng ngủ và gửi yêu cầu đặt lịch xem nhà mà không cần đăng ký tài khoản.
+                Quản trị viên tiếp nhận, duyệt yêu cầu và cập nhật tình trạng nhà theo thời gian thực.
+            </p>
+            <ul class="check-list">
+                <li><i class="bi bi-check2-circle"></i>Thông tin nhà đầy đủ: hình ảnh, giá, diện tích, địa chỉ, mô tả.</li>
+                <li><i class="bi bi-check2-circle"></i>Trạng thái "Còn trống / Đã thuê" luôn được cập nhật.</li>
+                <li><i class="bi bi-check2-circle"></i>Giao diện thân thiện trên cả máy tính và điện thoại.</li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="about-stat"><strong>@ViewBag.TotalHouses</strong><span>Nhà đã đăng</span></div>
+                </div>
+                <div class="col-6">
+                    <div class="about-stat"><strong>@ViewBag.TotalCategories</strong><span>Loại nhà</span></div>
+                </div>
+                <div class="col-6">
+                    <div class="about-stat"><strong>@ViewBag.TotalRequests</strong><span>Yêu cầu xem nhà</span></div>
+                </div>
+                <div class="col-6">
+                    <div class="about-stat"><strong>24/7</strong><span>Tiếp nhận yêu cầu</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-4">
+        <div class="col-md-4">
+            <div class="feature-box h-100">
+                <i class="bi bi-bullseye"></i>
+                <h3>Sứ mệnh</h3>
+                <p>Giúp mọi người tìm được nơi ở phù hợp nhanh chóng, tiết kiệm thời gian và chi phí.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-box h-100">
+                <i class="bi bi-eye"></i>
+                <h3>Tầm nhìn</h3>
+                <p>Trở thành kênh thông tin cho thuê nhà đáng tin cậy cho sinh viên, người đi làm và gia đình trẻ.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-box h-100">
+                <i class="bi bi-heart"></i>
+                <h3>Giá trị cốt lõi</h3>
+                <p>Trung thực - Minh bạch - Tận tâm với từng khách hàng.</p>
+            </div>
+        </div>
+    </div>
+</div>

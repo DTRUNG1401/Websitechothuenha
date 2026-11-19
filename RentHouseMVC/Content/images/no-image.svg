@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <rect width="800" height="600" fill="#f1f5f9"/>
+  <rect x="20" y="20" width="760" height="560" rx="18" fill="none" stroke="#cbd5e1" stroke-width="4" stroke-dasharray="18 12"/>
+  <g fill="none" stroke="#94a3b8" stroke-width="16" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M260 300 L400 180 L540 300"/>
+    <path d="M290 280 V420 H510 V280"/>
+    <path d="M370 420 V350 H430 V420"/>
+  </g>
+  <text x="400" y="490" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="600" fill="#64748b" text-anchor="middle">Chưa có ảnh</text>
+</svg>
