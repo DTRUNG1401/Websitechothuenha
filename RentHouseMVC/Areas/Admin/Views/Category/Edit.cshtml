@@ -1,0 +1,35 @@
+﻿@model RentHouseMVC.Models.Category
+@{
+    ViewBag.Title = "Sửa loại nhà";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card admin-card">
+            <div class="card-header"><i class="bi bi-pencil-square me-1"></i> Sửa loại nhà #@Model.Id</div>
+            <div class="card-body">
+                @using (Html.BeginForm("Edit", "Category", new { id = Model.Id }, FormMethod.Post, new { novalidate = "novalidate" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2 small" })
+
+                    <div class="mb-4">
+                        @Html.LabelFor(m => m.CatName, new { @class = "form-label" }) <span class="text-danger">*</span>
+                        @Html.TextBoxFor(m => m.CatName, new { @class = "form-control", maxlength = "100" })
+                        @Html.ValidationMessageFor(m => m.CatName)
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Lưu thay đổi</button>
+                        <a href="@Url.Action("Index")" class="btn btn-light">Quay lại</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

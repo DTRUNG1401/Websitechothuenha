@@ -1,0 +1,444 @@
+﻿/* =====================================================================
+   RentHouse - CSS trang quản trị (Area Admin)
+   ===================================================================== */
+
+:root {
+    --ad-primary: #0f766e;
+    --ad-primary-dark: #115e59;
+    --ad-accent: #ea580c;
+    --ad-sidebar: #0f172a;
+    --ad-sidebar-hover: #1e293b;
+    --ad-bg: #f1f5f9;
+    --ad-border: #e2e8f0;
+
+    --bs-primary: #0f766e;
+    --bs-primary-rgb: 15, 118, 110;
+    --bs-primary-bg-subtle: #ccfbf1;
+    --bs-link-color: #0f766e;
+    --bs-link-color-rgb: 15, 118, 110;
+    --bs-link-hover-color: #115e59;
+    --bs-link-hover-color-rgb: 17, 94, 89;
+    --bs-body-font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --bs-body-color: #1e293b;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--ad-primary);
+    --bs-btn-border-color: var(--ad-primary);
+    --bs-btn-hover-bg: var(--ad-primary-dark);
+    --bs-btn-hover-border-color: var(--ad-primary-dark);
+    --bs-btn-active-bg: #134e4a;
+    --bs-btn-active-border-color: #134e4a;
+    --bs-btn-disabled-bg: var(--ad-primary);
+    --bs-btn-disabled-border-color: var(--ad-primary);
+    --bs-btn-focus-shadow-rgb: 15, 118, 110;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--ad-primary);
+    --bs-btn-border-color: var(--ad-primary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--ad-primary);
+    --bs-btn-hover-border-color: var(--ad-primary);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--ad-primary-dark);
+    --bs-btn-active-border-color: var(--ad-primary-dark);
+    --bs-btn-focus-shadow-rgb: 15, 118, 110;
+}
+
+.pagination {
+    --bs-pagination-color: var(--ad-primary);
+    --bs-pagination-active-bg: var(--ad-primary);
+    --bs-pagination-active-border-color: var(--ad-primary);
+    gap: 4px;
+}
+
+.pagination .page-link {
+    border-radius: 8px !important;
+    min-width: 38px;
+    text-align: center;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5eead4;
+    box-shadow: 0 0 0 .25rem rgba(15, 118, 110, .18);
+}
+
+.text-accent {
+    color: var(--ad-accent) !important;
+}
+
+/* ---------- Kiểm tra dữ liệu ---------- */
+.field-validation-error {
+    display: block;
+    color: #dc3545;
+    font-size: .85rem;
+    margin-top: .3rem;
+}
+
+.field-validation-error:empty {
+    display: none;
+}
+
+.input-validation-error {
+    border-color: #dc3545 !important;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.validation-summary-errors ul {
+    margin-bottom: 0;
+    padding-left: 1.1rem;
+}
+
+/* ---------- Khung trang ---------- */
+.admin-body {
+    background: var(--ad-bg);
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    background: var(--ad-sidebar);
+    color: #cbd5e1;
+}
+
+.admin-offcanvas {
+    --bs-offcanvas-bg: var(--ad-sidebar);
+    --bs-offcanvas-color: #cbd5e1;
+    --bs-offcanvas-width: 270px;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: 1.25rem 1.5rem;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.25rem;
+    text-decoration: none;
+}
+
+.admin-brand:hover {
+    color: #fff;
+}
+
+.admin-brand small {
+    font-weight: 500;
+    font-size: .75rem;
+    color: #5eead4;
+    border: 1px solid rgba(94, 234, 212, .4);
+    border-radius: 6px;
+    padding: 0 .35rem;
+}
+
+.brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-nav {
+    padding: .5rem .75rem;
+}
+
+.admin-nav .nav-label {
+    text-transform: uppercase;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    color: #64748b;
+    padding: 1rem .75rem .4rem;
+}
+
+.admin-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    color: #cbd5e1;
+    border-radius: 10px;
+    padding: .6rem .75rem;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.admin-nav .nav-link i {
+    font-size: 1.1rem;
+}
+
+.admin-nav .nav-link:hover {
+    background: var(--ad-sidebar-hover);
+    color: #fff;
+}
+
+.admin-nav .nav-link.active {
+    background: var(--ad-primary);
+    color: #fff;
+}
+
+.sidebar-footer {
+    color: #64748b;
+}
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-topbar {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: #fff;
+    border-bottom: 1px solid var(--ad-border);
+    padding: .75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.admin-page-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ad-primary);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.admin-footer {
+    padding: 1rem 1.5rem;
+    color: #94a3b8;
+    font-size: .85rem;
+}
+
+/* ---------- Thẻ, bảng ---------- */
+.admin-card {
+    border: 1px solid var(--ad-border);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    overflow: hidden;
+}
+
+.admin-card > .card-header {
+    background: #fff;
+    font-weight: 700;
+    padding: .9rem 1.25rem;
+    border-bottom: 1px solid var(--ad-border);
+}
+
+.admin-table thead th,
+.admin-card .table thead th {
+    background: #f8fafc;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-card .table td,
+.admin-card .table th {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.admin-thumb {
+    width: 90px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--ad-border);
+    background: #f1f5f9;
+}
+
+.status-toggle {
+    cursor: pointer;
+    font-size: .8rem;
+    padding: .45em .7em;
+}
+
+.status-toggle:hover {
+    filter: brightness(.92);
+}
+
+.image-preview {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: #f1f5f9;
+}
+
+.request-house-img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.note-box {
+    white-space: pre-line;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: .5rem .75rem;
+}
+
+/* ---------- Thẻ thống kê (Dashboard) ---------- */
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid var(--ad-border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    height: 100%;
+}
+
+.stat-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: .88rem;
+}
+
+.stat-value {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.stat-sub {
+    font-size: .82rem;
+    color: #94a3b8;
+}
+
+.stat-sub a {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ---------- Tab trạng thái yêu cầu ---------- */
+.status-tabs {
+    gap: .5rem;
+}
+
+.status-tabs .nav-link {
+    background: #fff;
+    border: 1px solid var(--ad-border);
+    color: #334155;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.status-tabs .nav-link.active {
+    background: var(--ad-primary);
+    border-color: var(--ad-primary);
+    color: #fff;
+}
+
+/* ---------- Trang đăng nhập ---------- */
+.login-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, .12), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(249, 115, 22, .25), transparent 35%),
+        linear-gradient(135deg, #0f766e, #134e4a);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.25rem;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .25);
+}
+
+.login-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    color: #fff;
+    font-size: 1.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- Máy tính: menu trái cố định ---------- */
+@media (min-width: 992px) {
+    .admin-sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .admin-offcanvas {
+        height: 100%;
+    }
+
+    .admin-offcanvas .offcanvas-body {
+        height: 100%;
+    }
+}
+
+/* ---------- Điện thoại / máy tính bảng ---------- */
+@media (max-width: 991.98px) {
+    .admin-sidebar {
+        width: 0;
+    }
+
+    .admin-topbar {
+        padding: .6rem 1rem;
+    }
+
+    .admin-content {
+        padding: 1rem;
+    }
+}

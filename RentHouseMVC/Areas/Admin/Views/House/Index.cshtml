@@ -1,0 +1,102 @@
+﻿@model RentHouseMVC.Models.ViewModels.AdminHouseListViewModel
+@{
+    ViewBag.Title = "Quản lý nhà cho thuê";
+    string currentUrl = Request.RawUrl;
+}
+
+<div class="card admin-card">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span><i class="bi bi-houses me-1"></i> Danh sách nhà (@Model.Houses.TotalItemCount)</span>
+        <a href="@Url.Action("Create")" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Đăng nhà mới</a>
+    </div>
+
+    <!-- Bộ lọc -->
+    <div class="card-body border-bottom">
+        <form action="@Url.Action("Index")" method="get" class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <label for="keyword" class="form-label small mb-1">Từ khóa</label>
+                <input type="text" id="keyword" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Tiêu đề, địa chỉ, quận..." maxlength="100" />
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="catId" class="form-label small mb-1">Loại nhà</label>
+                @Html.DropDownList("catId", Model.Categories, "Tất cả", new { @class = "form-select", id = "catId" })
+            </div>
+            <div class="col-6 col-md-2">
+                <label for="status" class="form-label small mb-1">Trạng thái</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    @foreach (var s in HouseStatus.All)
+                    {
+                        <option value="@s" selected="@(Model.Status == s)">@s</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1"><i class="bi bi-funnel"></i> Lọc</button>
+                <a href="@Url.Action("Index")" class="btn btn-light" title="Xóa lọc"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 admin-table">
+                <thead>
+                    <tr>
+                        <th style="width: 110px;">Ảnh</th>
+                        <th>Nhà</th>
+                        <th>Loại</th>
+                        <th class="text-end">Giá thuê</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-end" style="width: 170px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Houses.Count == 0)
+                    {
+                        <tr><td colspan="6" class="text-center text-muted py-4">Không có nhà nào phù hợp.</td></tr>
+                    }
+                    @foreach (var h in Model.Houses)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@Url.HouseImage(h.Image)" alt="@h.Title" class="admin-thumb" />
+                            </td>
+                            <td>
+                                <div class="fw-semibold">@h.Title</div>
+                                <div class="small text-muted"><i class="bi bi-geo-alt"></i> @h.Address, @h.District</div>
+                                <div class="small text-muted">
+                                    @DisplayHelper.FormatAcreage(h.Acreage) &middot; @h.Bedrooms PN &middot; Đăng @DisplayHelper.FormatDate(h.PostedDate)
+                                </div>
+                            </td>
+                            <td class="text-nowrap">@h.Category.CatName</td>
+                            <td class="text-end text-nowrap fw-semibold text-accent">@DisplayHelper.FormatMoney(h.Price)</td>
+                            <td class="text-center">
+                                @using (Html.BeginForm("ToggleStatus", "House", new { id = h.HouseId }, FormMethod.Post, new { data_confirm = "Đổi trạng thái của nhà \"" + h.Title + "\"?" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="returnUrl" value="@currentUrl" />
+                                    <button type="submit" class="badge border-0 status-toggle @DisplayHelper.HouseStatusCss(h.Status)" title="Bấm để đổi trạng thái">
+                                        @h.Status <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                }
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <a href="@Url.Action("Details", "House", new { id = h.HouseId, area = "" })" target="_blank" rel="noopener" class="btn btn-sm btn-light" title="Xem trên website"><i class="bi bi-eye"></i></a>
+                                <a href="@Url.Action("Edit", new { id = h.HouseId })" class="btn btn-sm btn-outline-primary" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                <a href="@Url.Action("Delete", new { id = h.HouseId })" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (Model.Houses.PageCount > 1)
+    {
+        <div class="card-footer bg-white pb-3">
+            @Html.Partial("_Pager", new PagerModel(Model.Houses.PageNumber, Model.Houses.PageCount,
+                p => Url.Action("Index", new { keyword = Model.Keyword, catId = Model.CatId, status = Model.Status, page = p })))
+        </div>
+    }
+</div>

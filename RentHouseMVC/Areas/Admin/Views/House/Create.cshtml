@@ -1,0 +1,13 @@
+﻿@model RentHouseMVC.Models.ViewModels.HouseFormViewModel
+@{
+    ViewBag.Title = "Đăng nhà mới";
+}
+
+@using (Html.BeginForm("Create", "House", FormMethod.Post, new { enctype = "multipart/form-data", novalidate = "novalidate" }))
+{
+    @Html.Partial("_HouseForm", Model)
+}
+
+@section scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

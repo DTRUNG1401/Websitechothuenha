@@ -1,0 +1,101 @@
+﻿@model RentHouseMVC.Models.ViewModels.HouseFormViewModel
+@*
+    Form dùng chung cho Thêm / Sửa nhà.
+    Gọi từ Create.cshtml và Edit.cshtml (bên trong Html.BeginForm có enctype multipart/form-data).
+*@
+@Html.AntiForgeryToken()
+@Html.HiddenFor(m => m.HouseId)
+@Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2 small" })
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card admin-card">
+            <div class="card-header"><i class="bi bi-info-circle me-1"></i> Thông tin nhà</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Title, new { @class = "form-label" }) <span class="text-danger">*</span>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control", maxlength = "200", placeholder = "VD: Căn hộ mini full nội thất gần sân bay" })
+                    @Html.ValidationMessageFor(m => m.Title)
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.CatId, new { @class = "form-label" }) <span class="text-danger">*</span>
+                        @Html.DropDownListFor(m => m.CatId, (SelectList)ViewBag.Categories, "-- Chọn loại nhà --", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.CatId)
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.District, new { @class = "form-label" }) <span class="text-danger">*</span>
+                        @Html.DropDownListFor(m => m.District, (SelectList)ViewBag.Districts, "-- Chọn quận/huyện --", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.District)
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Address, new { @class = "form-label" }) <span class="text-danger">*</span>
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", maxlength = "255", placeholder = "VD: 35/2 Nguyễn Trọng Tuyển, Phường 15" })
+                    @Html.ValidationMessageFor(m => m.Address)
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.Price, new { @class = "form-label" }) <span class="text-danger">*</span>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Price, "{0:0}", new { @class = "form-control", type = "number", placeholder = "6500000" })
+                            <span class="input-group-text">đ</span>
+                        </div>
+                        <div class="form-text" id="pricePreview"></div>
+                        @Html.ValidationMessageFor(m => m.Price)
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.Acreage, new { @class = "form-label" }) <span class="text-danger">*</span>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Acreage, new { @class = "form-control", type = "number", step = "any", placeholder = "35" })
+                            <span class="input-group-text">m²</span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Acreage)
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.Bedrooms, new { @class = "form-label" }) <span class="text-danger">*</span>
+                        @Html.TextBoxFor(m => m.Bedrooms, new { @class = "form-control", type = "number", placeholder = "1" })
+                        @Html.ValidationMessageFor(m => m.Bedrooms)
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 8, placeholder = "Mô tả kết cấu, nội thất, tiện ích xung quanh, điều kiện thuê..." })
+                    @Html.ValidationMessageFor(m => m.Description)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card admin-card mb-4">
+            <div class="card-header"><i class="bi bi-toggle-on me-1"></i> Trạng thái</div>
+            <div class="card-body">
+                @Html.DropDownListFor(m => m.Status, (SelectList)ViewBag.Statuses, new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.Status)
+            </div>
+        </div>
+
+        <div class="card admin-card">
+            <div class="card-header"><i class="bi bi-image me-1"></i> Ảnh đại diện</div>
+            <div class="card-body">
+                <img src="@Url.HouseImage(Model.CurrentImage)" alt="Ảnh nhà" id="imagePreview" class="img-fluid rounded border mb-3 w-100 image-preview" />
+                <input type="file" id="ImageFile" name="ImageFile" class="form-control"
+                       accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                       data-max-size="@ImageHelper.MaxFileSize" data-preview="#imagePreview" />
+                <div class="form-text">JPG, PNG hoặc WEBP, dung lượng dưới 2MB. @(Model.IsEdit ? "Bỏ trống nếu giữ ảnh cũ." : "Có thể bỏ trống.")</div>
+                <span class="field-validation-error" id="ImageFile-client-error"></span>
+                @Html.ValidationMessageFor(m => m.ImageFile)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-2 mt-4">
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>@(Model.IsEdit ? "Lưu thay đổi" : "Đăng nhà")</button>
+    <a href="@Url.Action("Index")" class="btn btn-light">Quay lại</a>
+</div>

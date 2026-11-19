@@ -1,0 +1,105 @@
+﻿@model RentHouseMVC.Models.RentalRequest
+@{
+    ViewBag.Title = "Chi tiết yêu cầu #" + Model.RequestId;
+    string currentUrl = Request.RawUrl;
+}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card admin-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-lines-fill me-1"></i> Thông tin khách hàng</span>
+                <span class="badge fs-6 @DisplayHelper.RequestStatusCss(Model.Status)"><i class="bi @DisplayHelper.RequestStatusIcon(Model.Status)"></i> @Model.Status</span>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Mã yêu cầu</dt>
+                    <dd class="col-sm-8">#@Model.RequestId</dd>
+                    <dt class="col-sm-4">Họ tên</dt>
+                    <dd class="col-sm-8 fw-semibold">@Model.CustomerName</dd>
+                    <dt class="col-sm-4">Số điện thoại</dt>
+                    <dd class="col-sm-8"><a href="tel:@Model.CustomerPhone">@Model.CustomerPhone</a></dd>
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">
+                        @if (string.IsNullOrEmpty(Model.CustomerEmail))
+                        {
+                            <span class="text-muted fst-italic">Không cung cấp</span>
+                        }
+                        else
+                        {
+                            <a href="mailto:@Model.CustomerEmail">@Model.CustomerEmail</a>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">Ngày giờ muốn xem</dt>
+                    <dd class="col-sm-8 fw-semibold text-primary">@DisplayHelper.FormatDateTime(Model.ViewingDate)</dd>
+                    <dt class="col-sm-4">Ngày gửi yêu cầu</dt>
+                    <dd class="col-sm-8">@DisplayHelper.FormatDateTime(Model.CreatedDate) (@DisplayHelper.TimeAgo(Model.CreatedDate))</dd>
+                    <dt class="col-sm-4">Lời nhắn</dt>
+                    <dd class="col-sm-8">
+                        @if (string.IsNullOrEmpty(Model.Note))
+                        {
+                            <span class="text-muted fst-italic">Không có</span>
+                        }
+                        else
+                        {
+                            <div class="note-box">@Model.Note</div>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-white d-flex flex-wrap gap-2">
+                @if (Model.Status != RequestStatus.Approved)
+                {
+                    using (Html.BeginForm("Approve", "RentalRequest", new { id = Model.RequestId }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@currentUrl" />
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Duyệt yêu cầu</button>
+                    }
+                }
+                @if (Model.Status != RequestStatus.Cancelled)
+                {
+                    using (Html.BeginForm("Cancel", "RentalRequest", new { id = Model.RequestId }, FormMethod.Post, new { data_confirm = "Hủy yêu cầu này?" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@currentUrl" />
+                        <button type="submit" class="btn btn-warning"><i class="bi bi-x-lg me-1"></i>Hủy yêu cầu</button>
+                    }
+                }
+                @using (Html.BeginForm("Delete", "RentalRequest", new { id = Model.RequestId }, FormMethod.Post, new { data_confirm = "Xóa vĩnh viễn yêu cầu này?" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash me-1"></i>Xóa</button>
+                }
+                <a href="@Url.Action("Index")" class="btn btn-light ms-auto"><i class="bi bi-arrow-left me-1"></i>Danh sách</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card admin-card h-100">
+            <div class="card-header"><i class="bi bi-house me-1"></i> Nhà khách muốn thuê</div>
+            <img src="@Url.HouseImage(Model.House.Image)" alt="@Model.House.Title" class="card-img-top request-house-img" />
+            <div class="card-body">
+                <h2 class="h6 fw-bold">@Model.House.Title</h2>
+                <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> @Model.House.Address, @Model.House.District</p>
+                <p class="mb-2 fw-bold text-accent">@DisplayHelper.FormatPrice(Model.House.Price)</p>
+                <p class="mb-3">
+                    <span class="badge text-bg-light border">@Model.House.Category.CatName</span>
+                    <span class="badge @DisplayHelper.HouseStatusCss(Model.House.Status)">@Model.House.Status</span>
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="@Url.Action("Details", "House", new { id = Model.HouseId, area = "" })" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye me-1"></i>Xem trên website</a>
+                    @using (Html.BeginForm("ToggleStatus", "House", new { id = Model.HouseId }, FormMethod.Post, new { data_confirm = "Đổi trạng thái nhà này?" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@currentUrl" />
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-repeat me-1"></i>Chuyển sang "@(Model.House.Status == HouseStatus.Available ? HouseStatus.Rented : HouseStatus.Available)"
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
