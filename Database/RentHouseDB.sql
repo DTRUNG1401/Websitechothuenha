@@ -7,7 +7,7 @@
    Script sẽ XÓA database RentHouseDB cũ (nếu có) và tạo lại từ đầu.
    ---------------------------------------------------------------------
    Collation Vietnamese_CI_AI: so sánh chuỗi không phân biệt hoa/thường
-   và không phân biệt dấu => tìm "nha tro" vẫn ra "Nhà trọ".
+   và không phân biệt dấu thanh => tìm "phong tro" vẫn ra "Phòng trọ".
    ===================================================================== */
 
 USE master;
