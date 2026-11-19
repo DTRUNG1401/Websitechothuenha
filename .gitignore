@@ -1,0 +1,81 @@
+## .gitignore chuẩn cho dự án Visual Studio / ASP.NET MVC
+## (rút gọn từ mẫu github/gitignore VisualStudio.gitignore)
+
+# Thư mục cấu hình cục bộ của Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Kết quả build
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+bld/
+*.pdb
+*.ilk
+*.obj
+*.tmp
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+
+# Gói NuGet (Visual Studio tự restore khi Build)
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Kết quả test
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+
+# Hồ sơ publish (có thể chứa mật khẩu)
+*.pubxml
+*.publishproj
+*.publishsettings
+PublishScripts/
+*.azurePubxml
+
+# Cơ sở dữ liệu cục bộ
+*.mdf
+*.ldf
+*.ndf
+
+# Công cụ / IDE khác
+.idea/
+*.sln.iml
+.vscode/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+node_modules/
+
+# File hệ điều hành
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Ảnh người dùng upload khi chạy thử (chỉ giữ ảnh mẫu mau-*.svg)
+RentHouseMVC/Content/images/houses/*
+!RentHouseMVC/Content/images/houses/mau-*.svg
+!RentHouseMVC/Content/images/houses/.gitkeep

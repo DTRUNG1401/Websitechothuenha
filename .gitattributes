@@ -1,0 +1,14 @@
+# Chuẩn hóa xuống dòng: lưu LF trong repo, xuất ra CRLF khi checkout / tải ZIP (Windows)
+* text=auto eol=crlf
+
+# File nhị phân
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.woff   binary
+*.woff2  binary
+*.dll    binary
+*.exe    binary
