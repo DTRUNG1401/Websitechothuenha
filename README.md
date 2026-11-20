@@ -16,7 +16,7 @@
 | Framework web | **ASP.NET MVC 5.2.9** (Razor 3.2.9, WebPages 3.2.9) |
 | ORM | **Entity Framework 6.4.4** – kiểu *Database First*: database tạo bằng script SQL, entity class và `RentHouseDBContext` viết tay khớp đúng script |
 | Cơ sở dữ liệu | **SQL Server Express** (database `RentHouseDB`) |
-| Giao diện | **Bootstrap 5.3.3**, **Bootstrap Icons 1.11.3** (copy thẳng vào project, lấy từ npm – không dùng CDN) |
+| Giao diện | **Bootstrap 5.3.3** (tùy biến bằng biến CSS trong `Content/theme.css`), **Bootstrap Icons 1.11.3**, font **Be Vietnam Pro** (`@fontsource/be-vietnam-pro` 5.3.0) – tất cả copy thẳng vào project, lấy từ npm, không dùng CDN |
 | Kiểm tra dữ liệu phía client | jQuery 3.7.1, jQuery Validation 1.19.5, jQuery Validation Unobtrusive 4.0.0 (lấy từ npm) |
 | Biên dịch view C# mới | Microsoft.CodeDom.Providers.DotNetCompilerPlatform 2.0.1 |
 | IDE | Visual Studio 2022, chạy bằng IIS Express |
@@ -40,8 +40,10 @@ RentHouseMVC/
   App_Start/                      <- RouteConfig, FilterConfig
   App_GlobalResources/            <- thông báo lỗi kiểu dữ liệu bằng tiếng Việt
   Areas/Admin/                    <- trang quản trị (Controllers, Views, _AdminLayout)
-  Content/                        <- bootstrap, bootstrap-icons, site.css, admin.css, images/
-    images/houses/                <- ảnh nhà (ảnh mẫu mau-*.svg + ảnh upload)
+  Content/                        <- bootstrap, bootstrap-icons, theme.css, site.css, admin.css
+    fonts/                        <- font Be Vietnam Pro (woff2) + giấy phép OFL
+    images/                       <- hero.jpg (ảnh đầu trang chủ), no-image.svg, favicon
+    images/houses/                <- ảnh nhà (ảnh mẫu mau-XX.jpg + ảnh upload)
   Controllers/                    <- HomeController, HouseController, ErrorController
   Filters/                        <- AdminAuthorizeAttribute (kiểm tra đăng nhập Admin)
   Helpers/                        <- PagedList (phân trang tự viết), PasswordHelper (SHA256),
@@ -82,6 +84,9 @@ RentHouseMVC/
 2. Menu **File → Open → File...** → chọn `Database\RentHouseDB.sql`.
 3. Bấm **Execute** (F5). Script sẽ xóa database `RentHouseDB` cũ (nếu có), tạo lại 4 bảng và thêm dữ liệu mẫu.
 4. Cuối script có bảng kiểm tra: `Category 4`, `House 12`, `RentalRequest 5`, `Account 1` là thành công.
+
+> Nếu bạn đã chạy script ở phiên bản trước (ảnh mẫu tên `mau-XX.svg`), hãy **chạy lại script** để cột `Image` đổi sang `mau-XX.jpg`.
+> Không chạy lại thì website vẫn chạy, chỉ là các nhà mẫu hiện ảnh "Chưa có ảnh".
 
 ### Bước 5 – Đổi tên server trong chuỗi kết nối (nếu cần)
 Mở `RentHouseMVC\Web.config`, tìm:
@@ -176,7 +181,7 @@ Khi chạy trên máy cá nhân (localhost), trang lỗi 500 hiển thị thêm 
 | Phân trang | Tự viết `PagedList<T>` + partial `_Pager` | Không cài thêm thư viện (đúng yêu cầu). Khách 9 nhà/trang, Admin 10 dòng/trang. |
 | Định dạng số | `globalization culture="en-US"`, giá hiển thị bằng `DisplayHelper.FormatPrice` | Client (jQuery Validate) và server đọc số `45.5` giống nhau; giá vẫn hiển thị kiểu Việt Nam `12.000.000 đ/tháng`. |
 | Thư viện JS | jQuery, jQuery Validation lấy từ npm và copy vào `Scripts/` | Giống cách lấy Bootstrap; giảm số gói NuGet. Không dùng `System.Web.Optimization` (bundling) để project gọn. |
-| Ảnh mẫu | 11 ảnh minh họa SVG `mau-*.svg` + 1 nhà để trống ảnh (hiện placeholder) | Không phụ thuộc ảnh bản quyền bên ngoài. Ảnh upload mới lưu ở `Content/images/houses` với tên GUID. |
+| Ảnh mẫu | 11 file `mau-XX.jpg` + `hero.jpg` (hiện là khung xám, xem mục 10) + 1 nhà để trống ảnh (hiện `no-image.svg`) | Đổi ảnh chỉ cần chép đè file, không phải sửa code hay database. Ảnh upload mới lưu ở `Content/images/houses` với tên GUID. |
 | Đăng xuất | Form POST có AntiForgeryToken | Tránh bị đăng xuất bằng link giả mạo (CSRF). |
 | HTTPS | Tắt SSL của IIS Express | Chạy được ngay, không phải cài chứng chỉ khi F5. Khi publish thật nên bật HTTPS. |
 | Port | `http://localhost:50780/` | Cố định để tài liệu hướng dẫn nhất quán. |
@@ -185,10 +190,11 @@ Khi chạy trên máy cá nhân (localhost), trang lỗi 500 hiển thị thêm 
 
 ## 8. Kiểm tra trước khi đẩy lên GitHub
 Project được viết trên môi trường Linux (không có Visual Studio/MSBuild cho .NET Framework), nên đã kiểm tra bằng các bước tự động:
-- Biên dịch **toàn bộ code C# và cả 31 file view Razor** (sinh code bằng chính Razor 3 của MVC 5) trên reference assemblies .NET Framework 4.8 với đúng các DLL NuGet ở trên: **0 lỗi, 0 cảnh báo**.
+- Biên dịch **toàn bộ code C# và cả 34 file view Razor** (sinh code bằng chính Razor 3 của MVC 5) trên reference assemblies .NET Framework 4.8 với đúng các DLL NuGet ở trên: **0 lỗi, 0 cảnh báo**.
 - Phân tích cú pháp script SQL bằng thư viện T-SQL ScriptDom của Microsoft: 0 lỗi; số giá trị trong mọi lệnh INSERT khớp số cột.
 - Cho Entity Framework 6.4.4 tự dựng mô hình từ `RentHouseDBContext` rồi so khớp với script: tên 4 bảng, tên/kiểu/độ dài/NULL của từng cột, 2 khóa ngoại và `ON DELETE CASCADE` **khớp hoàn toàn**; các truy vấn LINQ chính dịch được sang SQL có tham số.
-- Rà toàn bộ 126 liên kết `Url.Action` / `Html.BeginForm` / `RedirectToAction` đều trỏ tới action có thật; mọi action POST có `[ValidateAntiForgeryToken]`; mọi file đều có trong `.csproj`.
+- Chụp 17 trang (khách + quản trị) ở bề rộng 375px, 768px, 1280px: không trang nào cuộn ngang; đo độ tương phản chữ: tất cả đạt WCAG AA.
+- Rà toàn bộ 122 liên kết `Url.Action` / `Html.BeginForm` / `RedirectToAction` đều trỏ tới action có thật; mọi action POST có `[ValidateAntiForgeryToken]`; mọi file đều có trong `.csproj`.
 
 Do không chạy được IIS Express + SQL Server trên Linux, bạn hãy chạy thử theo **Bước 6** trên Windows; nếu gặp lỗi xem mục 4.
 
@@ -200,3 +206,55 @@ Do không chạy được IIS Express + SQL Server trên Linux, bạn hãy chạ
 | Quản trị viên | `admin` | `123456` |
 
 Mật khẩu trong database được lưu dạng SHA256 (`8d969eef...6c92`), không lưu mật khẩu gốc. Chuỗi kết nối dùng *Windows Authentication* nên không chứa mật khẩu SQL.
+
+---
+
+## 10. Giao diện
+
+Giao diện được thiết kế lại theo hướng một website bất động sản thật: gọn, nhiều khoảng trắng, chữ dễ đọc.
+
+| Thành phần | Quy ước |
+|---|---|
+| Màu | Navy `#1F3B66` cho header, nút chính, liên kết, giá tiền. Vàng `#F2B544` **chỉ** cho nút hành động quan trọng (Tìm nhà, Gửi yêu cầu). Còn lại là trắng và thang xám trung tính. Màu đỏ chỉ dùng cho thông báo lỗi và nút xóa. |
+| Chữ | Be Vietnam Pro, chữ thường 16px, giãn dòng 1.6; tiêu đề đậm 600–700, cỡ 18–28px. |
+| Khoảng cách | Bội số 8px; nội dung rộng tối đa 1200px. |
+| Bo góc, viền | 8px cho thẻ, 6px cho nút và ô nhập; viền xám 1px thay cho bóng đổ, chỉ có bóng rất nhẹ khi rê chuột vào thẻ. Không gradient, không hiệu ứng kính mờ, không phóng to khi rê chuột. |
+| Icon | Chỉ ở chỗ giúp nhận biết: tìm kiếm, diện tích, phòng ngủ, vị trí. |
+| Trợ năng | Tương phản chữ đạt WCAG AA, viền focus navy 2px khi dùng bàn phím, liên kết "Bỏ qua đến nội dung chính", mọi ảnh có `alt`. |
+
+File CSS: `Content/theme.css` (biến màu, font, tùy biến Bootstrap – dùng chung), `Content/site.css` (trang khách),
+`Content/admin.css` (trang quản trị). Muốn đổi màu chủ đạo chỉ cần sửa các biến `--rh-*` ở đầu `theme.css`.
+
+## 11. Ảnh nhà
+
+Môi trường dùng để viết project **không tải được ảnh** từ Unsplash/Pexels (mạng chặn các máy chủ ảnh), nên các ảnh
+hiện là **khung xám trung tính**, đặt sẵn đúng tên file. Muốn dùng ảnh thật, chỉ cần **chép đè** các file sau
+(giữ nguyên tên, không phải sửa code hay database):
+
+| File | Dùng cho | Gợi ý ảnh |
+|---|---|---|
+| `Content/images/hero.jpg` | Ảnh lớn đầu trang chủ | Phố hoặc nhà ở TP.HCM, ngang, khoảng 1920×640 |
+| `Content/images/houses/mau-01.jpg` | Nhà 1 + ảnh mục "Nhà nguyên căn" ở trang chủ | Nhà phố 1 trệt 2 lầu |
+| `Content/images/houses/mau-02.jpg` | Nhà 2 | Nhà mặt tiền |
+| `Content/images/houses/mau-03.jpg` | Nhà 3 | Nhà trong hẻm |
+| `Content/images/houses/mau-04.jpg` | Nhà 4 + ảnh mục "Phòng trọ" | Phòng trọ có gác lửng |
+| `Content/images/houses/mau-05.jpg` | Nhà 5 | Phòng trọ sinh viên |
+| `Content/images/houses/mau-07.jpg` | Nhà 7 + ảnh mục "Căn hộ chung cư" | Phòng khách căn hộ |
+| `Content/images/houses/mau-08.jpg` | Nhà 8 | Căn hộ 3 phòng ngủ |
+| `Content/images/houses/mau-09.jpg` | Nhà 9 | Căn hộ 1 phòng ngủ |
+| `Content/images/houses/mau-10.jpg` | Nhà 10 + ảnh mục "Căn hộ mini" | Căn hộ mini/studio |
+| `Content/images/houses/mau-11.jpg` | Nhà 11 | Căn hộ mini có ban công |
+| `Content/images/houses/mau-12.jpg` | Nhà 12 | Căn hộ mini 2 phòng ngủ |
+
+Nhà số 6 cố ý để trống ảnh để minh họa ảnh "Chưa có ảnh" (`no-image.svg`).
+
+Yêu cầu: ảnh ngang tỉ lệ khoảng 4:3 (khoảng 1200×900), định dạng `.jpg`, **dưới 200KB** (nén bằng https://squoosh.app, chất lượng 70–75).
+Nguồn ảnh miễn phí bản quyền: **Unsplash** (https://unsplash.com/license) hoặc **Pexels** (https://www.pexels.com/license/).
+Hai giấy phép này không bắt buộc ghi nguồn, nhưng nên ghi lại để báo cáo minh bạch. Sau khi thay ảnh, điền bảng dưới đây:
+
+| File | Tác giả | Nguồn (link trang ảnh) |
+|---|---|---|
+| hero.jpg | | |
+| mau-01.jpg … mau-12.jpg | | |
+
+Font **Be Vietnam Pro** dùng giấy phép SIL Open Font License 1.1 (`Content/fonts/OFL.txt`).

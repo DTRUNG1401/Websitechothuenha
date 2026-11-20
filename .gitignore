@@ -75,7 +75,7 @@ ehthumbs.db
 Desktop.ini
 .DS_Store
 
-# Ảnh người dùng upload khi chạy thử (chỉ giữ ảnh mẫu mau-*.svg)
+# Ảnh người dùng upload khi chạy thử (chỉ giữ ảnh mẫu mau-*)
 RentHouseMVC/Content/images/houses/*
-!RentHouseMVC/Content/images/houses/mau-*.svg
+!RentHouseMVC/Content/images/houses/mau-*
 !RentHouseMVC/Content/images/houses/.gitkeep

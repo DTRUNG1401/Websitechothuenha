@@ -1,116 +1,74 @@
 ﻿@model RentHouseMVC.Models.ViewModels.DashboardViewModel
 @{
-    ViewBag.Title = "Dashboard";
+    ViewBag.Title = "Tổng quan";
 }
 
+<div class="toolbar">
+    <h2>Số liệu ngày @DateTime.Now.ToString("dd/MM/yyyy")</h2>
+    <a href="@Url.Action("Create", "House")" class="btn btn-primary btn-sm">Đăng nhà mới</a>
+</div>
+
 <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <span class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-houses"></i></span>
-            <div>
-                <div class="stat-label">Tổng số nhà</div>
-                <div class="stat-value">@Model.TotalHouses</div>
-                <div class="stat-sub">@Model.TotalCategories loại nhà</div>
-            </div>
+    <div class="col-sm-4">
+        <div class="stat-box">
+            <div class="stat-label">Tổng số nhà</div>
+            <div class="stat-value">@Model.TotalHouses</div>
+            <div class="stat-note">Thuộc @Model.TotalCategories loại nhà</div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <span class="stat-icon bg-success-subtle text-success"><i class="bi bi-door-open"></i></span>
-            <div>
-                <div class="stat-label">Nhà còn trống</div>
-                <div class="stat-value">@Model.AvailableHouses</div>
-                <div class="stat-sub">@Model.RentedHouses nhà đã thuê</div>
-            </div>
+    <div class="col-sm-4">
+        <div class="stat-box">
+            <div class="stat-label">Nhà còn trống</div>
+            <div class="stat-value">@Model.AvailableHouses</div>
+            <div class="stat-note">@Model.RentedHouses nhà đã cho thuê</div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <span class="stat-icon bg-warning-subtle text-warning-emphasis"><i class="bi bi-hourglass-split"></i></span>
-            <div>
-                <div class="stat-label">Yêu cầu chờ duyệt</div>
-                <div class="stat-value">@Model.PendingRequests</div>
-                <div class="stat-sub">
-                    <a href="@Url.Action("Index", "RentalRequest", new { status = RequestStatus.Pending })">Xử lý ngay <i class="bi bi-arrow-right"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <span class="stat-icon bg-info-subtle text-info-emphasis"><i class="bi bi-calendar-check"></i></span>
-            <div>
-                <div class="stat-label">Tổng số yêu cầu</div>
-                <div class="stat-value">@Model.TotalRequests</div>
-                <div class="stat-sub">Tất cả trạng thái</div>
-            </div>
+    <div class="col-sm-4">
+        <div class="stat-box">
+            <div class="stat-label">Yêu cầu chờ duyệt</div>
+            <div class="stat-value">@Model.PendingRequests</div>
+            <div class="stat-note"><a href="@Url.Action("Index", "RentalRequest", new { status = RequestStatus.Pending })">Xem danh sách</a></div>
         </div>
     </div>
 </div>
 
-<div class="row g-4">
-    <div class="col-xl-8">
-        <div class="card admin-card h-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-clock-history me-1"></i> 5 yêu cầu thuê mới nhất</span>
-                <a href="@Url.Action("Index", "RentalRequest")" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
-            </div>
-            <div class="card-body p-0">
-                @if (Model.LatestRequests.Count == 0)
-                {
-                    <p class="text-muted text-center py-4 mb-0">Chưa có yêu cầu nào.</p>
-                }
-                else
-                {
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Khách hàng</th>
-                                    <th>Nhà</th>
-                                    <th>Ngày xem</th>
-                                    <th>Trạng thái</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var r in Model.LatestRequests)
-                                {
-                                    <tr>
-                                        <td><a href="@Url.Action("Details", "RentalRequest", new { id = r.RequestId })">#@r.RequestId</a></td>
-                                        <td>
-                                            <div class="fw-semibold text-nowrap">@r.CustomerName</div>
-                                            <div class="small text-muted">@r.CustomerPhone</div>
-                                        </td>
-                                        <td class="text-truncate" style="max-width: 170px;" title="@r.House.Title">@r.House.Title</td>
-                                        <td class="text-nowrap small">@DisplayHelper.FormatDateTime(r.ViewingDate)</td>
-                                        <td><span class="badge @DisplayHelper.RequestStatusCss(r.Status)">@r.Status</span></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-            </div>
-        </div>
+<div class="card admin-card">
+    <div class="card-header">
+        <span>Yêu cầu mới nhất <span class="header-note">(tổng @Model.TotalRequests yêu cầu)</span></span>
+        <a href="@Url.Action("Index", "RentalRequest")" class="btn btn-outline-secondary btn-sm">Xem tất cả</a>
     </div>
-    <div class="col-xl-4">
-        <div class="card admin-card h-100">
-            <div class="card-header"><i class="bi bi-lightning-charge me-1"></i> Thao tác nhanh</div>
-            <div class="card-body d-grid gap-2 align-content-start">
-                <a href="@Url.Action("Create", "House")" class="btn btn-primary text-start"><i class="bi bi-plus-circle me-2"></i>Đăng nhà mới</a>
-                <a href="@Url.Action("Create", "Category")" class="btn btn-outline-primary text-start"><i class="bi bi-tag me-2"></i>Thêm loại nhà</a>
-                <a href="@Url.Action("Index", "RentalRequest", new { status = RequestStatus.Pending })" class="btn btn-outline-warning text-start"><i class="bi bi-hourglass-split me-2"></i>Duyệt yêu cầu thuê</a>
-                <a href="@Url.Action("Index", "House", new { status = HouseStatus.Available })" class="btn btn-outline-success text-start"><i class="bi bi-door-open me-2"></i>Danh sách nhà còn trống</a>
-                <hr />
-                <div class="small text-muted">
-                    Tỉ lệ lấp đầy:
-                    <strong>@(Model.TotalHouses == 0 ? 0 : Model.RentedHouses * 100 / Model.TotalHouses)%</strong>
-                </div>
-                <div class="progress" role="progressbar" aria-label="Tỉ lệ lấp đầy" aria-valuenow="@(Model.TotalHouses == 0 ? 0 : Model.RentedHouses * 100 / Model.TotalHouses)" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar bg-success" style="width: @(Model.TotalHouses == 0 ? 0 : Model.RentedHouses * 100 / Model.TotalHouses)%"></div>
-                </div>
-            </div>
+    @if (Model.LatestRequests.Count == 0)
+    {
+        <div class="card-body text-muted">Chưa có yêu cầu nào.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-admin">
+                <thead>
+                    <tr>
+                        <th scope="col">Mã</th>
+                        <th scope="col">Khách hàng</th>
+                        <th scope="col">Điện thoại</th>
+                        <th scope="col">Nhà</th>
+                        <th scope="col">Hẹn xem</th>
+                        <th scope="col">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model.LatestRequests)
+                    {
+                        <tr>
+                            <td><a href="@Url.Action("Details", "RentalRequest", new { id = r.RequestId })">#@r.RequestId</a></td>
+                            <td class="cell-title text-nowrap">@r.CustomerName</td>
+                            <td class="text-nowrap">@r.CustomerPhone</td>
+                            <td class="text-truncate" style="max-width: 260px;" title="@r.House.Title">@r.House.Title</td>
+                            <td class="text-nowrap">@DisplayHelper.FormatDateTime(r.ViewingDate)</td>
+                            <td>@Html.Partial("_RequestStatus", r.Status)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-    </div>
+    }
 </div>

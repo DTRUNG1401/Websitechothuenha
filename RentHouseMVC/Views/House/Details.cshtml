@@ -4,11 +4,12 @@
     ViewBag.Title = house.Title;
     string requestSuccess = TempData["RequestSuccess"] as string;
     bool hasFormError = !ViewData.ModelState.IsValid;
+    bool rented = house.Status != HouseStatus.Available;
     // Thời điểm sớm nhất được chọn trên ô ngày giờ (định dạng của input datetime-local)
     string minViewingDate = DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm", System.Globalization.CultureInfo.InvariantCulture);
 }
 
-<div class="container pt-4">
+<div class="container pt-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
@@ -18,151 +19,123 @@
     </nav>
 </div>
 
-<div class="container pb-4">
-    <div class="row g-4">
+<div class="container pb-2">
+    <div class="row g-4 g-lg-5">
         <!-- ===== THÔNG TIN NHÀ ===== -->
         <div class="col-lg-8">
-            <div class="detail-image ratio ratio-16x9">
+            <figure class="detail-photo">
                 <img src="@Url.HouseImage(house.Image)" alt="@house.Title" />
-                <span class="badge house-status fs-6 @DisplayHelper.HouseStatusCss(house.Status)">
-                    <i class="bi @(house.Status == HouseStatus.Available ? "bi-check-circle" : "bi-lock")"></i> @house.Status
-                </span>
-            </div>
+                @if (rented)
+                {
+                    <span class="listing-flag">@house.Status</span>
+                }
+            </figure>
 
-            <div class="detail-card mt-4">
-                <div class="d-flex flex-wrap gap-2 mb-2">
-                    <span class="badge rounded-pill text-bg-light border"><i class="bi @DisplayHelper.CategoryIcon(house.Category.CatName)"></i> @house.Category.CatName</span>
-                    <span class="badge rounded-pill text-bg-light border"><i class="bi bi-clock"></i> Đăng @DisplayHelper.TimeAgo(house.PostedDate)</span>
-                    <span class="badge rounded-pill text-bg-light border"><i class="bi bi-hash"></i>Mã tin: @house.HouseId</span>
-                </div>
-                <h1 class="detail-title">@house.Title</h1>
-                <p class="detail-address"><i class="bi bi-geo-alt-fill text-danger"></i> @house.Address, @house.District, TP. Hồ Chí Minh</p>
+            <header class="detail-head">
+                <h1>@house.Title</h1>
+                <p class="detail-address"><i class="bi bi-geo-alt" aria-hidden="true"></i>@house.Address, @house.District, TP. Hồ Chí Minh</p>
+            </header>
 
-                <div class="detail-price">
-                    <span class="label">Giá thuê</span>
-                    <span class="value">@DisplayHelper.FormatPrice(house.Price)</span>
-                </div>
+            <ul class="detail-facts">
+                <li><i class="bi bi-aspect-ratio" aria-hidden="true"></i>@DisplayHelper.FormatAcreage(house.Acreage)</li>
+                <li><i class="bi bi-door-closed" aria-hidden="true"></i>@house.Bedrooms phòng ngủ</li>
+                <li><i class="bi bi-geo" aria-hidden="true"></i>@house.District</li>
+            </ul>
 
-                <div class="row g-3 detail-facts">
-                    <div class="col-6 col-md-3">
-                        <div class="fact"><i class="bi bi-aspect-ratio"></i><span>Diện tích</span><strong>@DisplayHelper.FormatAcreage(house.Acreage)</strong></div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="fact"><i class="bi bi-door-closed"></i><span>Phòng ngủ</span><strong>@house.Bedrooms phòng</strong></div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="fact"><i class="bi bi-map"></i><span>Quận/Huyện</span><strong>@house.District</strong></div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="fact"><i class="bi bi-calendar3"></i><span>Ngày đăng</span><strong>@DisplayHelper.FormatDate(house.PostedDate)</strong></div>
-                    </div>
-                </div>
+            <section class="detail-section" aria-labelledby="spec-title">
+                <h2 id="spec-title">Thông tin chính</h2>
+                <dl class="spec-list">
+                    <div><dt>Giá thuê</dt><dd>@DisplayHelper.FormatPrice(house.Price)</dd></div>
+                    <div><dt>Diện tích</dt><dd>@DisplayHelper.FormatAcreage(house.Acreage)</dd></div>
+                    <div><dt>Phòng ngủ</dt><dd>@house.Bedrooms</dd></div>
+                    <div><dt>Loại nhà</dt><dd>@house.Category.CatName</dd></div>
+                    <div><dt>Quận, huyện</dt><dd>@house.District</dd></div>
+                    <div><dt>Tình trạng</dt><dd>@house.Status</dd></div>
+                    <div><dt>Ngày đăng</dt><dd>@DisplayHelper.FormatDate(house.PostedDate)</dd></div>
+                    <div><dt>Mã tin</dt><dd>@house.HouseId</dd></div>
+                </dl>
+            </section>
 
-                <h2 class="h5 mt-4 mb-3">Mô tả chi tiết</h2>
+            <section class="detail-section" aria-labelledby="desc-title">
+                <h2 id="desc-title">Mô tả</h2>
                 @if (string.IsNullOrWhiteSpace(house.Description))
                 {
-                    <p class="text-muted fst-italic">Chưa có mô tả cho căn nhà này.</p>
+                    <p class="text-muted">Chủ nhà chưa thêm mô tả.</p>
                 }
                 else
                 {
                     @* Giữ xuống dòng bằng CSS (white-space: pre-line); Razor tự mã hóa HTML nên chống được XSS *@
                     <div class="detail-description">@house.Description</div>
                 }
-
-                <h2 class="h5 mt-4 mb-3">Thông tin tổng quan</h2>
-                <table class="table table-bordered detail-table mb-0">
-                    <tbody>
-                        <tr><th scope="row">Loại nhà</th><td>@house.Category.CatName</td></tr>
-                        <tr><th scope="row">Địa chỉ</th><td>@house.Address</td></tr>
-                        <tr><th scope="row">Quận/Huyện</th><td>@house.District</td></tr>
-                        <tr><th scope="row">Giá thuê</th><td>@DisplayHelper.FormatPrice(house.Price)</td></tr>
-                        <tr><th scope="row">Diện tích</th><td>@DisplayHelper.FormatAcreage(house.Acreage)</td></tr>
-                        <tr><th scope="row">Số phòng ngủ</th><td>@house.Bedrooms</td></tr>
-                        <tr>
-                            <th scope="row">Trạng thái</th>
-                            <td><span class="badge @DisplayHelper.HouseStatusCss(house.Status)">@house.Status</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            </section>
         </div>
 
-        <!-- ===== FORM ĐẶT LỊCH XEM NHÀ ===== -->
+        <!-- ===== HỘP ĐẶT LỊCH XEM NHÀ ===== -->
         <div class="col-lg-4">
-            <div class="request-box" id="dat-lich">
-                @if (!string.IsNullOrEmpty(requestSuccess))
-                {
-                    <div class="alert alert-success d-flex gap-2" role="alert">
-                        <i class="bi bi-check-circle-fill fs-4"></i>
-                        <div><strong>Đã gửi!</strong><br />@requestSuccess</div>
-                    </div>
-                }
+            <div class="booking-sticky">
+                <aside class="booking-box" id="dat-lich" aria-labelledby="booking-title">
+                    <p class="booking-price">@DisplayHelper.FormatMoney(house.Price) <span>/tháng</span></p>
+                    <p class="booking-sub">@DisplayHelper.FormatAcreage(house.Acreage) · @house.Bedrooms PN · @house.District</p>
+                    <hr class="booking-divider" />
 
-                @if (Model.CanRequest)
-                {
-                    <h2 class="h5 mb-1"><i class="bi bi-calendar-check text-primary me-1"></i>Đặt lịch xem nhà</h2>
-                    <p class="small text-muted">Điền thông tin, chúng tôi sẽ gọi lại xác nhận trong thời gian sớm nhất.</p>
-
-                    using (Html.BeginForm("SendRequest", "House", FormMethod.Post, new { novalidate = "novalidate", id = "requestForm" }))
+                    @if (!string.IsNullOrEmpty(requestSuccess))
                     {
-                        @Html.AntiForgeryToken()
-                        @Html.HiddenFor(m => m.RequestForm.HouseId)
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger small" })
-
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.RequestForm.CustomerName, new { @class = "form-label" }) <span class="text-danger">*</span>
-                            @Html.TextBoxFor(m => m.RequestForm.CustomerName, new { @class = "form-control", placeholder = "Nguyễn Văn A", maxlength = "100", autocomplete = "name" })
-                            @Html.ValidationMessageFor(m => m.RequestForm.CustomerName)
-                        </div>
-
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.RequestForm.CustomerPhone, new { @class = "form-label" }) <span class="text-danger">*</span>
-                            @Html.TextBoxFor(m => m.RequestForm.CustomerPhone, new { @class = "form-control", placeholder = "0901234567", maxlength = "15", type = "tel", autocomplete = "tel" })
-                            @Html.ValidationMessageFor(m => m.RequestForm.CustomerPhone)
-                        </div>
-
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.RequestForm.CustomerEmail, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.RequestForm.CustomerEmail, new { @class = "form-control", placeholder = "email@example.com (không bắt buộc)", maxlength = "100", type = "email", autocomplete = "email", data_msg_email = "Email không hợp lệ" })
-                            @Html.ValidationMessageFor(m => m.RequestForm.CustomerEmail)
-                        </div>
-
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.RequestForm.ViewingDate, new { @class = "form-label" }) <span class="text-danger">*</span>
-                            @Html.TextBoxFor(m => m.RequestForm.ViewingDate, "{0:yyyy-MM-dd'T'HH:mm}", new { @class = "form-control", type = "datetime-local", min = minViewingDate, data_msg_min = "Ngày giờ xem nhà phải sau thời điểm hiện tại" })
-                            @Html.ValidationMessageFor(m => m.RequestForm.ViewingDate)
-                        </div>
-
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.RequestForm.Note, new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.RequestForm.Note, new { @class = "form-control", rows = 3, maxlength = "500", placeholder = "Ví dụ: Tôi muốn xem nhà vào buổi tối, có nuôi thú cưng..." })
-                            @Html.ValidationMessageFor(m => m.RequestForm.Note)
-                        </div>
-
-                        <button type="submit" class="btn btn-accent w-100 btn-lg"><i class="bi bi-send me-1"></i>Gửi yêu cầu</button>
-                        <p class="small text-muted mt-2 mb-0"><i class="bi bi-shield-check"></i> Thông tin của bạn chỉ dùng để liên hệ xem nhà.</p>
+                        <div class="alert alert-success" role="status">@requestSuccess</div>
                     }
-                }
-                else
-                {
-                    <div class="rented-box">
-                        <i class="bi bi-house-lock"></i>
-                        <h2 class="h5">Nhà này đã được cho thuê</h2>
-                        <p class="mb-3">Rất tiếc, căn nhà đã có người thuê nên không nhận yêu cầu xem nhà. Bạn có thể tham khảo các nhà tương tự bên dưới.</p>
-                        <a href="@Url.Action("Search", "House", new { catId = house.CatId, onlyAvailable = "true" })" class="btn btn-primary">
-                            <i class="bi bi-search me-1"></i>Tìm nhà còn trống
-                        </a>
-                    </div>
-                }
 
-                <hr />
-                <div class="d-flex align-items-center gap-3">
-                    <span class="contact-avatar"><i class="bi bi-headset"></i></span>
-                    <div>
-                        <div class="small text-muted">Cần hỗ trợ ngay?</div>
-                        <strong>Hotline 1900 6868</strong>
-                    </div>
-                </div>
+                    @if (Model.CanRequest)
+                    {
+                        <h2 class="booking-title" id="booking-title">Đặt lịch xem nhà</h2>
+                        <p class="small text-muted">Chúng tôi gọi lại để xác nhận giờ hẹn.</p>
+
+                        using (Html.BeginForm("SendRequest", "House", FormMethod.Post, new { novalidate = "novalidate", id = "requestForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.RequestForm.HouseId)
+                            @Html.ValidationSummary(true, "")
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.RequestForm.CustomerName, new { @class = "form-label" })<span class="required-mark" aria-hidden="true">*</span>
+                                @Html.TextBoxFor(m => m.RequestForm.CustomerName, new { @class = "form-control", maxlength = "100", autocomplete = "name" })
+                                @Html.ValidationMessageFor(m => m.RequestForm.CustomerName)
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.RequestForm.CustomerPhone, new { @class = "form-label" })<span class="required-mark" aria-hidden="true">*</span>
+                                @Html.TextBoxFor(m => m.RequestForm.CustomerPhone, new { @class = "form-control", placeholder = "VD: 0901234567", maxlength = "15", type = "tel", autocomplete = "tel" })
+                                @Html.ValidationMessageFor(m => m.RequestForm.CustomerPhone)
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.RequestForm.CustomerEmail, new { @class = "form-label" }) <span class="text-muted fw-normal small">(không bắt buộc)</span>
+                                @Html.TextBoxFor(m => m.RequestForm.CustomerEmail, new { @class = "form-control", maxlength = "100", type = "email", autocomplete = "email", data_msg_email = "Email không hợp lệ" })
+                                @Html.ValidationMessageFor(m => m.RequestForm.CustomerEmail)
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.RequestForm.ViewingDate, new { @class = "form-label" })<span class="required-mark" aria-hidden="true">*</span>
+                                @Html.TextBoxFor(m => m.RequestForm.ViewingDate, "{0:yyyy-MM-dd'T'HH:mm}", new { @class = "form-control", type = "datetime-local", min = minViewingDate, data_msg_min = "Ngày giờ xem nhà phải sau thời điểm hiện tại" })
+                                @Html.ValidationMessageFor(m => m.RequestForm.ViewingDate)
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.RequestForm.Note, new { @class = "form-label" }) <span class="text-muted fw-normal small">(không bắt buộc)</span>
+                                @Html.TextAreaFor(m => m.RequestForm.Note, new { @class = "form-control", rows = 3, maxlength = "500", placeholder = "VD: Muốn xem buổi tối, có nuôi mèo" })
+                                @Html.ValidationMessageFor(m => m.RequestForm.Note)
+                            </div>
+
+                            <button type="submit" class="btn btn-accent btn-lg w-100">Gửi yêu cầu</button>
+                        }
+                    }
+                    else
+                    {
+                        <h2 class="booking-title" id="booking-title">Nhà đã có người thuê</h2>
+                        <p class="text-muted mb-3">Căn này không nhận lịch xem nữa. Bạn có thể xem các căn còn trống cùng loại.</p>
+                        <a href="@Url.Action("Search", "House", new { catId = house.CatId, onlyAvailable = "true" })" class="btn btn-outline-primary w-100">Xem nhà còn trống</a>
+                    }
+
+                    <p class="booking-help">Cần hỗ trợ? Gọi 1900 6868 (8:00 – 21:00).</p>
+                </aside>
             </div>
         </div>
     </div>
@@ -171,23 +144,18 @@
 <!-- ===== NHÀ CÙNG LOẠI ===== -->
 @if (Model.RelatedHouses.Count > 0)
 {
-    <section class="section section-soft">
-        <div class="container">
-            <div class="section-heading">
-                <div>
-                    <span class="section-kicker">Có thể bạn quan tâm</span>
-                    <h2>Các nhà cùng loại "@house.Category.CatName"</h2>
+    <section class="container section" aria-labelledby="related-title">
+        <div class="section-head">
+            <h2 id="related-title">@house.Category.CatName khác</h2>
+            <a href="@Url.Action("Index", "House", new { id = house.CatId })">Xem tất cả</a>
+        </div>
+        <div class="row g-4">
+            @foreach (var item in Model.RelatedHouses)
+            {
+                <div class="col-sm-6 col-lg-3">
+                    @Html.Partial("_HouseCard", item)
                 </div>
-                <a href="@Url.Action("Index", "House", new { id = house.CatId })" class="btn btn-link fw-semibold">Xem tất cả <i class="bi bi-arrow-right"></i></a>
-            </div>
-            <div class="row g-4">
-                @foreach (var item in Model.RelatedHouses)
-                {
-                    <div class="col-md-6 col-lg-3">
-                        @Html.Partial("_HouseCard", item)
-                    </div>
-                }
-            </div>
+            }
         </div>
     </section>
 }
@@ -197,8 +165,8 @@
     @if (hasFormError)
     {
         <script>
-            // Có lỗi nhập liệu: cuộn tới form đặt lịch
-            document.getElementById('dat-lich').scrollIntoView({ behavior: 'smooth' });
+            // Có lỗi nhập liệu: cuộn tới hộp đặt lịch
+            document.getElementById('dat-lich').scrollIntoView();
         </script>
     }
 }

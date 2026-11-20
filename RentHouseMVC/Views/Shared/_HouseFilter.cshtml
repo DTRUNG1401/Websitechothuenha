@@ -1,0 +1,98 @@
+﻿@model RentHouseMVC.Models.ViewModels.HouseSearchViewModel
+@*
+    Bộ lọc nhà dùng chung cho trang Danh sách (House/Index) và Tìm kiếm (House/Search).
+    - Máy tính: cột trái, dính khi cuộn trang.
+    - Máy tính bảng, điện thoại: khung trượt (offcanvas) mở bằng nút "Bộ lọc".
+    Form gửi bằng GET tới House/Search, tên field giữ đúng như HouseSearchViewModel.
+*@
+<div class="filter-sticky">
+    <div class="offcanvas-lg offcanvas-start filter-panel" tabindex="-1" id="filterPanel" aria-labelledby="filterPanelLabel">
+        <div class="offcanvas-header border-bottom">
+            <h2 class="offcanvas-title h5 mb-0" id="filterPanelLabel">Bộ lọc</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#filterPanel" aria-label="Đóng bộ lọc"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form action="@Url.Action("Search", "House", new { area = "" })" method="get" class="filter-box" role="search" aria-label="Lọc nhà cho thuê">
+                <h2 class="filter-box-title">Lọc kết quả</h2>
+
+                <div class="filter-group">
+                    <label for="keyword" class="form-label">Từ khóa</label>
+                    <input type="search" id="keyword" name="keyword" value="@Model.Keyword" class="form-control" maxlength="100" placeholder="Tên đường, phường, dự án" />
+                </div>
+
+                <div class="filter-group">
+                    <label for="catId" class="form-label">Loại nhà</label>
+                    <select id="catId" name="catId" class="form-select">
+                        <option value="">Mọi loại nhà</option>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c.Id" selected="@(Model.CatId == c.Id)">@c.CatName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="district" class="form-label">Quận, huyện</label>
+                    <select id="district" name="district" class="form-select">
+                        <option value="">Mọi khu vực</option>
+                        @foreach (var item in SearchOptions.DistrictItems(Model.District))
+                        {
+                            <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="price" class="form-label">Mức giá</label>
+                    <select id="price" name="price" class="form-select">
+                        <option value="">Mọi mức giá</option>
+                        @foreach (var item in SearchOptions.PriceRangeItems(Model.Price))
+                        {
+                            <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="minAcreage" class="form-label">Diện tích</label>
+                    <select id="minAcreage" name="minAcreage" class="form-select">
+                        <option value="">Không giới hạn</option>
+                        @foreach (var item in SearchOptions.AcreageItems(Model.MinAcreage))
+                        {
+                            <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="bedrooms" class="form-label">Phòng ngủ</label>
+                    <select id="bedrooms" name="bedrooms" class="form-select">
+                        <option value="">Không giới hạn</option>
+                        @foreach (var item in SearchOptions.BedroomItems(Model.Bedrooms))
+                        {
+                            <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group form-check">
+                    <input class="form-check-input" type="checkbox" id="onlyAvailable" name="onlyAvailable" value="true" checked="@Model.OnlyAvailable" />
+                    <label class="form-check-label" for="onlyAvailable">Chỉ hiện nhà còn trống</label>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Sort) && Model.Sort != "moi-nhat")
+                {
+                    <input type="hidden" name="sort" value="@Model.Sort" />
+                }
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-primary">Xem kết quả</button>
+                    @if (Model.HasFilter)
+                    {
+                        <a href="@Url.Action("Search", "House", new { area = "" })" class="small">Xóa bộ lọc</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

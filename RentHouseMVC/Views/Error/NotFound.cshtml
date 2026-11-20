@@ -3,14 +3,13 @@
 }
 
 <div class="container error-page">
-    <div class="error-code">4<span><i class="bi bi-house-x"></i></span>4</div>
-    <h1>Ôi! Không tìm thấy trang bạn cần</h1>
+    <p class="error-code">Lỗi 404</p>
+    <h1>Không tìm thấy trang</h1>
     <p class="text-muted">
-        Trang bạn truy cập không tồn tại, đã bị xóa hoặc đường dẫn bị gõ sai.<br />
-        Có thể căn nhà này đã được gỡ khỏi hệ thống.
+        Đường dẫn có thể đã bị gõ sai, hoặc tin cho thuê này đã được gỡ.
     </p>
-    <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
-        <a href="@Url.Action("Index", "Home", new { area = "" })" class="btn btn-primary btn-lg"><i class="bi bi-house me-1"></i>Về trang chủ</a>
-        <a href="@Url.Action("Search", "House", new { area = "" })" class="btn btn-outline-primary btn-lg"><i class="bi bi-search me-1"></i>Tìm nhà khác</a>
+    <div class="error-actions">
+        <a href="@Url.Action("Index", "Home", new { area = "" })" class="btn btn-primary">Về trang chủ</a>
+        <a href="@Url.Action("Search", "House", new { area = "" })" class="btn btn-outline-secondary">Tìm nhà khác</a>
     </div>
 </div>

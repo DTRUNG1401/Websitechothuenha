@@ -1,112 +1,97 @@
 ﻿@model RentHouseMVC.Models.ViewModels.AdminRequestListViewModel
 @{
-    ViewBag.Title = "Yêu cầu thuê nhà";
+    ViewBag.Title = "Yêu cầu thuê";
     string currentUrl = Request.RawUrl;
 }
 
 <!-- Lọc theo trạng thái -->
-<ul class="nav nav-pills status-tabs mb-3">
-    <li class="nav-item">
-        <a class="nav-link @(Model.Status == null ? "active" : "")" href="@Url.Action("Index", new { status = "" })">
-            Tất cả <span class="badge rounded-pill text-bg-light ms-1">@Model.TotalCount</span>
-        </a>
-    </li>
-    @foreach (var s in RequestStatus.All)
-    {
-        <li class="nav-item">
-            <a class="nav-link @(Model.Status == s ? "active" : "")" href="@Url.Action("Index", new { status = s })">
-                <i class="bi @DisplayHelper.RequestStatusIcon(s)"></i> @s
-                <span class="badge rounded-pill @DisplayHelper.RequestStatusCss(s) ms-1">@Model.CountOf(s)</span>
+<nav aria-label="Lọc theo trạng thái">
+    <ul class="status-tabs">
+        <li>
+            <a href="@Url.Action("Index", new { status = "" })" class="@(Model.Status == null ? "active" : "")" aria-current="@(Model.Status == null ? "page" : null)">
+                Tất cả <span class="count">@Model.TotalCount</span>
             </a>
         </li>
-    }
-</ul>
+        @foreach (var s in RequestStatus.All)
+        {
+            <li>
+                <a href="@Url.Action("Index", new { status = s })" class="@(Model.Status == s ? "active" : "")" aria-current="@(Model.Status == s ? "page" : null)">
+                    @s <span class="count">@Model.CountOf(s)</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
 
 <div class="card admin-card">
     <div class="card-header">
-        <i class="bi bi-calendar-check me-1"></i>
-        @(Model.Status == null ? "Tất cả yêu cầu" : "Yêu cầu " + Model.Status.ToLower()) (@Model.Requests.TotalItemCount)
+        <span>@(Model.Status == null ? "Tất cả yêu cầu" : "Yêu cầu " + Model.Status.ToLower()) <span class="header-note">(@Model.Requests.TotalItemCount)</span></span>
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 admin-table">
-                <thead>
+    <div class="table-responsive">
+        <table class="table table-hover table-admin">
+            <thead>
+                <tr>
+                    <th scope="col">Mã</th>
+                    <th scope="col">Khách hàng</th>
+                    <th scope="col">Điện thoại</th>
+                    <th scope="col">Nhà</th>
+                    <th scope="col">Hẹn xem</th>
+                    <th scope="col">Gửi lúc</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col" class="actions">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Requests.Count == 0)
+                {
+                    <tr><td colspan="8" class="text-center text-muted py-4">Không có yêu cầu nào.</td></tr>
+                }
+                @foreach (var r in Model.Requests)
+                {
                     <tr>
-                        <th>#</th>
-                        <th>Khách hàng</th>
-                        <th>Nhà muốn thuê</th>
-                        <th>Ngày giờ xem</th>
-                        <th>Ngày gửi</th>
-                        <th class="text-center">Trạng thái</th>
-                        <th class="text-end" style="width: 200px;">Thao tác</th>
+                        <td><a href="@Url.Action("Details", new { id = r.RequestId })" class="fw-semibold">#@r.RequestId</a></td>
+                        <td class="cell-title text-nowrap">@r.CustomerName</td>
+                        <td class="text-nowrap">@r.CustomerPhone</td>
+                        <td class="cell-truncate">
+                            <a href="@Url.Action("Details", "House", new { id = r.HouseId, area = "" })" target="_blank" rel="noopener" title="@r.House.Title">@r.House.Title</a>
+                        </td>
+                        <td class="text-nowrap">@DisplayHelper.FormatDateTime(r.ViewingDate)</td>
+                        <td class="text-nowrap cell-sub">@DisplayHelper.FormatDateTime(r.CreatedDate)</td>
+                        <td>@Html.Partial("_RequestStatus", r.Status)</td>
+                        <td class="actions">
+                            @if (r.Status != RequestStatus.Approved)
+                            {
+                                using (Html.BeginForm("Approve", "RentalRequest", new { id = r.RequestId }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="returnUrl" value="@currentUrl" />
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Duyệt</button>
+                                }
+                            }
+                            @if (r.Status != RequestStatus.Cancelled)
+                            {
+                                using (Html.BeginForm("Cancel", "RentalRequest", new { id = r.RequestId }, FormMethod.Post, new { data_confirm = "Hủy yêu cầu #" + r.RequestId + " của " + r.CustomerName + "?" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="returnUrl" value="@currentUrl" />
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Hủy</button>
+                                }
+                            }
+                            @using (Html.BeginForm("Delete", "RentalRequest", new { id = r.RequestId }, FormMethod.Post, new { data_confirm = "Xóa vĩnh viễn yêu cầu #" + r.RequestId + "?" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="returnUrl" value="@currentUrl" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                            }
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Requests.Count == 0)
-                    {
-                        <tr><td colspan="7" class="text-center text-muted py-4">Không có yêu cầu nào.</td></tr>
-                    }
-                    @foreach (var r in Model.Requests)
-                    {
-                        <tr>
-                            <td><a href="@Url.Action("Details", new { id = r.RequestId })" class="fw-semibold">#@r.RequestId</a></td>
-                            <td>
-                                <div class="fw-semibold">@r.CustomerName</div>
-                                <div class="small text-muted"><i class="bi bi-telephone"></i> @r.CustomerPhone</div>
-                                @if (!string.IsNullOrEmpty(r.CustomerEmail))
-                                {
-                                    <div class="small text-muted"><i class="bi bi-envelope"></i> @r.CustomerEmail</div>
-                                }
-                            </td>
-                            <td style="max-width: 260px;">
-                                <a href="@Url.Action("Details", "House", new { id = r.HouseId, area = "" })" target="_blank" rel="noopener" class="d-block text-truncate">@r.House.Title</a>
-                                <span class="badge @DisplayHelper.HouseStatusCss(r.House.Status)">@r.House.Status</span>
-                                @if (!string.IsNullOrEmpty(r.Note))
-                                {
-                                    <div class="small text-muted text-truncate" title="@r.Note"><i class="bi bi-chat-left-text"></i> @r.Note</div>
-                                }
-                            </td>
-                            <td class="text-nowrap">@DisplayHelper.FormatDateTime(r.ViewingDate)</td>
-                            <td class="text-nowrap small text-muted">@DisplayHelper.FormatDateTime(r.CreatedDate)</td>
-                            <td class="text-center"><span class="badge @DisplayHelper.RequestStatusCss(r.Status)">@r.Status</span></td>
-                            <td class="text-end">
-                                <div class="d-inline-flex flex-wrap justify-content-end gap-1">
-                                    @if (r.Status != RequestStatus.Approved)
-                                    {
-                                        using (Html.BeginForm("Approve", "RentalRequest", new { id = r.RequestId }, FormMethod.Post))
-                                        {
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="returnUrl" value="@currentUrl" />
-                                            <button type="submit" class="btn btn-sm btn-success" title="Duyệt"><i class="bi bi-check-lg"></i></button>
-                                        }
-                                    }
-                                    @if (r.Status != RequestStatus.Cancelled)
-                                    {
-                                        using (Html.BeginForm("Cancel", "RentalRequest", new { id = r.RequestId }, FormMethod.Post, new { data_confirm = "Hủy yêu cầu #" + r.RequestId + " của " + r.CustomerName + "?" }))
-                                        {
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="returnUrl" value="@currentUrl" />
-                                            <button type="submit" class="btn btn-sm btn-warning" title="Hủy"><i class="bi bi-x-lg"></i></button>
-                                        }
-                                    }
-                                    @using (Html.BeginForm("Delete", "RentalRequest", new { id = r.RequestId }, FormMethod.Post, new { data_confirm = "Xóa vĩnh viễn yêu cầu #" + r.RequestId + "?" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="returnUrl" value="@currentUrl" />
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="bi bi-trash"></i></button>
-                                    }
-                                    <a href="@Url.Action("Details", new { id = r.RequestId })" class="btn btn-sm btn-light" title="Chi tiết"><i class="bi bi-eye"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
     @if (Model.Requests.PageCount > 1)
     {
-        <div class="card-footer bg-white pb-3">
+        <div class="card-footer pb-3">
             @Html.Partial("_Pager", new PagerModel(Model.Requests.PageNumber, Model.Requests.PageCount,
                 p => Url.Action("Index", new { status = Model.Status, page = p })))
         </div>

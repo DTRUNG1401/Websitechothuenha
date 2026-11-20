@@ -5,17 +5,15 @@
 }
 @if (!string.IsNullOrEmpty(success))
 {
-    <div class="alert alert-success alert-dismissible fade show d-flex align-items-start gap-2" role="alert">
-        <i class="bi bi-check-circle-fill fs-5"></i>
-        <div class="flex-grow-1">@success</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    <div class="alert alert-success alert-dismissible fade show" role="status">
+        @success
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng thông báo"></button>
     </div>
 }
 @if (!string.IsNullOrEmpty(error))
 {
-    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-start gap-2" role="alert">
-        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-        <div class="flex-grow-1">@error</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @error
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng thông báo"></button>
     </div>
 }

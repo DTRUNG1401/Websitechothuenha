@@ -1,50 +1,46 @@
 ﻿@model List<RentHouseMVC.Models.ViewModels.CategorySummary>
 @{
-    ViewBag.Title = "Quản lý loại nhà";
+    ViewBag.Title = "Loại nhà";
 }
 
 <div class="card admin-card">
-    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-        <span><i class="bi bi-tags me-1"></i> Danh sách loại nhà (@Model.Count)</span>
-        <a href="@Url.Action("Create")" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Thêm loại nhà</a>
+    <div class="card-header">
+        <span>Loại nhà <span class="header-note">(@Model.Count)</span></span>
+        <a href="@Url.Action("Create")" class="btn btn-primary btn-sm">Thêm loại nhà</a>
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
+    <div class="table-responsive">
+        <table class="table table-hover table-admin">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 72px;">Mã</th>
+                    <th scope="col">Tên loại nhà</th>
+                    <th scope="col" class="num">Số nhà</th>
+                    <th scope="col" class="num">Còn trống</th>
+                    <th scope="col" class="actions">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">Chưa có loại nhà nào.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
                     <tr>
-                        <th style="width: 80px;">Mã</th>
-                        <th>Tên loại nhà</th>
-                        <th class="text-center">Số nhà</th>
-                        <th class="text-center">Còn trống</th>
-                        <th class="text-end" style="width: 220px;">Thao tác</th>
+                        <td>@item.Id</td>
+                        <td class="cell-title">@item.CatName</td>
+                        <td class="num"><a href="@Url.Action("Index", "House", new { catId = item.Id })">@item.HouseCount</a></td>
+                        <td class="num">@item.AvailableCount</td>
+                        <td class="actions">
+                            <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-outline-secondary btn-sm">Sửa</a>
+                            <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-outline-danger btn-sm">Xóa</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Count == 0)
-                    {
-                        <tr><td colspan="5" class="text-center text-muted py-4">Chưa có loại nhà nào.</td></tr>
-                    }
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Id</td>
-                            <td class="fw-semibold"><i class="bi @DisplayHelper.CategoryIcon(item.CatName) text-primary me-1"></i>@item.CatName</td>
-                            <td class="text-center">
-                                <a href="@Url.Action("Index", "House", new { catId = item.Id })" class="badge rounded-pill text-bg-light border text-decoration-none">@item.HouseCount nhà</a>
-                            </td>
-                            <td class="text-center"><span class="badge rounded-pill text-bg-success">@item.AvailableCount</span></td>
-                            <td class="text-end text-nowrap">
-                                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i> Sửa</a>
-                                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Xóa</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
     <div class="card-footer small text-muted">
-        <i class="bi bi-info-circle"></i> Chỉ xóa được loại nhà khi không còn nhà nào thuộc loại đó.
+        Chỉ xóa được loại nhà khi không còn nhà nào thuộc loại đó.
     </div>
 </div>

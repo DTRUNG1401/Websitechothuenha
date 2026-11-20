@@ -10,50 +10,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Đăng nhập quản trị | RentHouse</title>
+    <link rel="icon" href="~/favicon.ico" sizes="any" />
     <link rel="icon" href="~/Content/images/favicon.svg" type="image/svg+xml" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/Content/theme.css" rel="stylesheet" />
     <link href="~/Content/admin.css" rel="stylesheet" />
 </head>
-<body class="login-body">
-    <div class="login-card">
-        <div class="text-center mb-4">
-            <span class="login-logo"><i class="bi bi-house-heart-fill"></i></span>
-            <h1 class="h4 fw-bold mt-3 mb-1">Đăng nhập quản trị</h1>
-            <p class="text-muted small mb-0">Website cho thuê nhà RentHouse</p>
-        </div>
+<body class="login-page">
+    <main class="login-card">
+        <a class="login-brand" href="@Url.Action("Index", "Home", new { area = "" })">RentHouse</a>
+        <h1>Đăng nhập quản trị</h1>
+        <p class="text-muted small mb-4">Dành cho quản trị viên website.</p>
 
         @using (Html.BeginForm("Login", "Account", new { area = "Admin" }, FormMethod.Post, new { novalidate = "novalidate" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.ReturnUrl)
-            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2 small" })
+            @Html.ValidationSummary(true, "")
 
             <div class="mb-3">
                 @Html.LabelFor(m => m.Username, new { @class = "form-label" })
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "admin", autofocus = "autofocus", autocomplete = "username", maxlength = "50" })
-                </div>
+                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", autofocus = "autofocus", autocomplete = "username", maxlength = "50" })
                 @Html.ValidationMessageFor(m => m.Username)
             </div>
 
             <div class="mb-4">
                 @Html.LabelFor(m => m.Password, new { @class = "form-label" })
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "••••••", autocomplete = "current-password" })
-                </div>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "current-password" })
                 @Html.ValidationMessageFor(m => m.Password)
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 btn-lg"><i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập</button>
+            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
         }
 
-        <div class="text-center mt-4">
-            <a href="@Url.Action("Index", "Home", new { area = "" })" class="small text-decoration-none"><i class="bi bi-arrow-left"></i> Quay về trang chủ</a>
-        </div>
-    </div>
+        <p class="login-back mb-0">
+            <a href="@Url.Action("Index", "Home", new { area = "" })">Về trang chủ RentHouse</a>
+        </p>
+    </main>
 
     <script src="~/Scripts/jquery-3.7.1.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>

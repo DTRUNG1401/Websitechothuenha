@@ -2,7 +2,7 @@
     ViewBag.Title = "Liên hệ";
 }
 
-<section class="page-banner">
+<div class="page-head">
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -10,97 +10,68 @@
                 <li class="breadcrumb-item active" aria-current="page">Liên hệ</li>
             </ol>
         </nav>
-        <h1>Liên hệ với chúng tôi</h1>
-        <p class="mb-0">RentHouse luôn sẵn sàng hỗ trợ bạn tìm được căn nhà ưng ý.</p>
+        <h1>Liên hệ</h1>
+        <p class="page-head-lead">Gọi điện hoặc gửi email trong giờ làm việc. Muốn xem một căn cụ thể, hãy đặt lịch ngay trên trang của căn đó.</p>
     </div>
-</section>
+</div>
 
 <div class="container section">
     <div class="row g-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="contact-card">
-                <i class="bi bi-geo-alt"></i>
-                <h3>Văn phòng</h3>
-                <p>273 An Dương Vương, Phường 3, Quận 5, TP.HCM</p>
+        <div class="col-lg-5">
+            <div class="panel h-100">
+                <h2>Văn phòng RentHouse</h2>
+                <dl class="fact-list">
+                    <div><dt>Địa chỉ</dt><dd>273 An Dương Vương, Phường 3, Quận 5</dd></div>
+                    <div><dt>Điện thoại</dt><dd>1900 6868</dd></div>
+                    <div><dt>Zalo</dt><dd>0901 234 567</dd></div>
+                    <div><dt>Email</dt><dd>hotro@renthouse.vn</dd></div>
+                    <div><dt>Giờ làm việc</dt><dd>8:00 – 21:00, cả tuần</dd></div>
+                </dl>
             </div>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="contact-card">
-                <i class="bi bi-telephone"></i>
-                <h3>Hotline</h3>
-                <p>1900 6868<br /><small class="text-muted">8:00 - 21:00 tất cả các ngày</small></p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="contact-card">
-                <i class="bi bi-envelope"></i>
-                <h3>Email</h3>
-                <p>hotro@renthouse.vn<br /><small class="text-muted">Phản hồi trong 24 giờ</small></p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="contact-card">
-                <i class="bi bi-chat-dots"></i>
-                <h3>Zalo / Messenger</h3>
-                <p>0901 234 567<br /><small class="text-muted">Tư vấn trực tuyến</small></p>
+        <div class="col-lg-7">
+            <div class="panel h-100">
+                <h2>Đặt lịch xem nhà</h2>
+                <ol class="steps">
+                    <li>Tìm căn phù hợp ở trang <a href="@Url.Action("Search", "House")">Tìm kiếm</a>.</li>
+                    <li>Mở trang chi tiết, điền họ tên, số điện thoại và giờ muốn xem.</li>
+                    <li>Nhân viên gọi lại để xác nhận lịch hẹn, thường trong 2–4 giờ làm việc.</li>
+                </ol>
+                <a href="@Url.Action("Search", "House", new { onlyAvailable = "true" })" class="btn btn-primary">Xem nhà còn trống</a>
             </div>
         </div>
     </div>
 
-    <div class="row g-4 mt-2">
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body p-4">
-                    <h2 class="h4 mb-3"><i class="bi bi-calendar2-week text-primary me-2"></i>Muốn đặt lịch xem nhà?</h2>
-                    <p>Bạn không cần gọi điện. Hãy làm theo 3 bước sau:</p>
-                    <ol class="steps">
-                        <li>Tìm căn nhà phù hợp ở mục <a href="@Url.Action("Search", "House")">Tìm kiếm</a>.</li>
-                        <li>Mở trang chi tiết nhà, điền họ tên, số điện thoại và thời gian muốn xem.</li>
-                        <li>Nhân viên RentHouse sẽ gọi lại xác nhận lịch hẹn cho bạn.</li>
-                    </ol>
-                    <a href="@Url.Action("Search", "House", new { onlyAvailable = "true" })" class="btn btn-primary mt-2">
-                        <i class="bi bi-search me-1"></i>Xem nhà còn trống
-                    </a>
-                </div>
+    <h2 class="h5 mt-5 mb-3">Câu hỏi thường gặp</h2>
+    <div class="accordion" id="faq">
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                    Đặt lịch xem nhà có mất phí không?
+                </button>
+            </h3>
+            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faq">
+                <div class="accordion-body">Không. Bạn chỉ trả tiền cọc và tiền thuê khi ký hợp đồng với chủ nhà.</div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body p-4">
-                    <h2 class="h4 mb-3"><i class="bi bi-question-circle text-primary me-2"></i>Câu hỏi thường gặp</h2>
-                    <div class="accordion accordion-flush" id="faq">
-                        <div class="accordion-item">
-                            <h3 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
-                                    Đặt lịch xem nhà có mất phí không?
-                                </button>
-                            </h3>
-                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">Hoàn toàn miễn phí. Bạn chỉ thanh toán khi ký hợp đồng thuê với chủ nhà.</div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h3 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
-                                    Bao lâu thì yêu cầu của tôi được xác nhận?
-                                </button>
-                            </h3>
-                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">Thông thường trong vòng 2 - 4 giờ làm việc kể từ khi bạn gửi yêu cầu.</div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h3 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
-                                    Tôi muốn đăng tin cho thuê nhà thì làm thế nào?
-                                </button>
-                            </h3>
-                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">Vui lòng gọi hotline hoặc gửi email, quản trị viên sẽ kiểm tra và đăng tin giúp bạn.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                    Bao lâu thì có người gọi lại?
+                </button>
+            </h3>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faq">
+                <div class="accordion-body">Thường trong 2–4 giờ làm việc. Yêu cầu gửi sau 21:00 sẽ được gọi lại vào sáng hôm sau.</div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                    Tôi muốn đăng tin cho thuê nhà của mình?
+                </button>
+            </h3>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faq">
+                <div class="accordion-body">Gọi 1900 6868 hoặc gửi email kèm địa chỉ, giá thuê và vài tấm ảnh. Quản trị viên kiểm tra rồi đăng tin giúp bạn.</div>
             </div>
         </div>
     </div>

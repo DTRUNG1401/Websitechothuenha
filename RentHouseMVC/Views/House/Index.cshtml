@@ -2,9 +2,17 @@
 @{
     ViewBag.Title = Model.PageTitle;
     int? currentId = Model.CurrentCategoryId;
+    int totalAll = Model.Categories.Sum(c => c.HouseCount);
+
+    // Bộ lọc bên trái gửi sang House/Search, chọn sẵn loại nhà đang xem
+    var filter = new HouseSearchViewModel
+    {
+        CatId = currentId,
+        Categories = Model.Categories.Select(c => new Category { Id = c.Id, CatName = c.CatName }).ToList()
+    };
 }
 
-<section class="page-banner">
+<div class="page-head">
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -21,58 +29,77 @@
             </ol>
         </nav>
         <h1>@Model.PageTitle</h1>
-        <p class="mb-0">
-            Có <strong>@Model.Houses.TotalItemCount</strong> nhà
-            @if (Model.CurrentCategory != null)
+    </div>
+</div>
+
+<div class="container">
+    <nav aria-label="Loại nhà">
+        <ul class="type-tabs">
+            <li>
+                <a href="@Url.Action("Index", "House", new { id = "" })" class="@(currentId == null ? "active" : "")" aria-current="@(currentId == null ? "page" : null)">
+                    Tất cả <span class="count">@totalAll</span>
+                </a>
+            </li>
+            @foreach (var c in Model.Categories)
             {
-                <span>thuộc loại "@Model.CurrentCategory.CatName"</span>
+                <li>
+                    <a href="@Url.Action("Index", "House", new { id = c.Id })" class="@(currentId == c.Id ? "active" : "")" aria-current="@(currentId == c.Id ? "page" : null)">
+                        @c.CatName <span class="count">@c.HouseCount</span>
+                    </a>
+                </li>
             }
-            đang được đăng trên RentHouse.
-        </p>
-    </div>
-</section>
+        </ul>
+    </nav>
 
-<div class="container section pt-4">
-    <!-- Lọc nhanh theo loại nhà -->
-    <div class="category-pills mb-4">
-        <a href="@Url.Action("Index", "House", new { id = "" })" class="pill @(currentId == null ? "active" : "")">
-            <i class="bi bi-grid"></i> Tất cả
-        </a>
-        @foreach (var c in Model.Categories)
-        {
-            <a href="@Url.Action("Index", "House", new { id = c.Id })" class="pill @(currentId == c.Id ? "active" : "")">
-                <i class="bi @DisplayHelper.CategoryIcon(c.CatName)"></i> @c.CatName <span class="pill-count">@c.HouseCount</span>
-            </a>
-        }
-        <a href="@Url.Action("Search", "House", new { catId = currentId })" class="pill pill-outline ms-md-auto">
-            <i class="bi bi-sliders"></i> Lọc nâng cao
-        </a>
-    </div>
+    <div class="row g-4 listing-layout">
+        <aside class="col-lg-3" aria-label="Bộ lọc">
+            @Html.Partial("_HouseFilter", filter)
+        </aside>
 
-    @if (Model.Houses.TotalItemCount == 0)
-    {
-        <div class="empty-state">
-            <i class="bi bi-house-x"></i>
-            <p>Chưa có nhà nào trong mục này.</p>
-            <a href="@Url.Action("Index", "House", new { id = "" })" class="btn btn-primary">Xem tất cả nhà</a>
-        </div>
-    }
-    else
-    {
-        <p class="text-muted small mb-3">
-            Hiển thị @Model.Houses.FirstItemOnPage - @Model.Houses.LastItemOnPage trên tổng số @Model.Houses.TotalItemCount nhà
-            (trang @Model.Houses.PageNumber/@Model.Houses.PageCount)
-        </p>
-        <div class="row g-4">
-            @foreach (var house in Model.Houses)
+        <div class="col-lg-9">
+            <div class="results-bar">
+                <p class="results-count"><strong>@Model.Houses.TotalItemCount</strong> nhà</p>
+                <div class="results-tools">
+                    <button type="button" class="btn btn-outline-secondary btn-sm d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#filterPanel" aria-controls="filterPanel">Bộ lọc</button>
+                    <form action="@Url.Action("Search", "House")" method="get" class="sort-form">
+                        @if (currentId.HasValue)
+                        {
+                            <input type="hidden" name="catId" value="@currentId" />
+                        }
+                        <label for="sort">Sắp xếp</label>
+                        <select id="sort" name="sort" class="form-select form-select-sm" data-auto-submit="true">
+                            @foreach (var item in SearchOptions.SortItems(null))
+                            {
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                            }
+                        </select>
+                        <noscript><button type="submit" class="btn btn-sm btn-outline-secondary">Áp dụng</button></noscript>
+                    </form>
+                </div>
+            </div>
+
+            @if (Model.Houses.TotalItemCount == 0)
             {
-                <div class="col-md-6 col-lg-4">
-                    @Html.Partial("_HouseCard", house)
+                <div class="empty-state">
+                    <h2>Chưa có nhà trong mục này</h2>
+                    <p class="mb-3">Bạn có thể xem các loại nhà khác.</p>
+                    <a href="@Url.Action("Index", "House", new { id = "" })" class="btn btn-outline-primary">Xem tất cả nhà</a>
                 </div>
             }
-        </div>
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var house in Model.Houses)
+                    {
+                        <div class="col-sm-6 col-xl-4">
+                            @Html.Partial("_HouseCard", house)
+                        </div>
+                    }
+                </div>
 
-        @Html.Partial("_Pager", new PagerModel(Model.Houses.PageNumber, Model.Houses.PageCount,
-            p => Url.Action("Index", "House", new { id = currentId, page = p })))
-    }
+                @Html.Partial("_Pager", new PagerModel(Model.Houses.PageNumber, Model.Houses.PageCount,
+                    p => Url.Action("Index", "House", new { id = currentId, page = p })))
+            }
+        </div>
+    </div>
 </div>

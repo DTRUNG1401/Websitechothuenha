@@ -8,23 +8,14 @@
     <a class="nav-link dropdown-toggle @(isHouseList ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Nhà cho thuê
     </a>
-    <ul class="dropdown-menu shadow border-0 py-2">
-        <li>
-            <a class="dropdown-item" href="@Url.Action("Index", "House", new { id = "", area = "" })">
-                <i class="bi bi-grid me-2"></i>Tất cả nhà
-            </a>
-        </li>
-        @if (Model.Count > 0)
-        {
-            <li><hr class="dropdown-divider" /></li>
-        }
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="@Url.Action("Index", "House", new { id = "", area = "" })">Tất cả nhà</a></li>
         @foreach (var item in Model)
         {
             <li>
-                <a class="dropdown-item d-flex justify-content-between align-items-center gap-4"
-                   href="@Url.Action("Index", "House", new { id = item.Id, area = "" })">
-                    <span><i class="bi @DisplayHelper.CategoryIcon(item.CatName) me-2"></i>@item.CatName</span>
-                    <span class="badge rounded-pill text-bg-light">@item.HouseCount</span>
+                <a class="dropdown-item d-flex justify-content-between gap-4" href="@Url.Action("Index", "House", new { id = item.Id, area = "" })">
+                    <span>@item.CatName</span>
+                    <span class="text-muted">@item.HouseCount</span>
                 </a>
             </li>
         }

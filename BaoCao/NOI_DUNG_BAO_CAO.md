@@ -30,7 +30,7 @@ và Bootstrap 5 để xây dựng giao diện thân thiện, hiển thị tốt 
 
 | STT | Chức năng | Mô tả |
 |---|---|---|
-| 1 | Trang chủ | Banner giới thiệu, ô tìm kiếm nhanh (từ khóa, loại nhà, quận, khoảng giá), thống kê số nhà, danh sách các loại nhà và các nhà mới đăng. |
+| 1 | Trang chủ | Ảnh lớn đầu trang kèm thanh tìm kiếm một hàng (từ khóa, loại nhà, quận, mức giá), mục "Tìm theo loại nhà" (4 thẻ ảnh có số lượng) và lưới "Nhà mới đăng". |
 | 2 | Xem nhà theo loại | Hiển thị danh sách nhà theo mã loại; nếu không chọn loại thì hiển thị tất cả. Phân trang 9 nhà/trang. |
 | 3 | Tìm kiếm, lọc, sắp xếp | Tìm theo từ khóa (tiêu đề, địa chỉ, quận, mô tả); lọc theo loại nhà, quận/huyện, khoảng giá, diện tích tối thiểu, số phòng ngủ, chỉ nhà còn trống; sắp xếp theo giá tăng/giảm hoặc ngày đăng mới/cũ. |
 | 4 | Xem chi tiết nhà | Ảnh, tiêu đề, giá thuê (định dạng 12.000.000 đ/tháng), diện tích, số phòng ngủ, địa chỉ, quận, mô tả, trạng thái, ngày đăng và các nhà cùng loại. |
@@ -50,7 +50,7 @@ và Bootstrap 5 để xây dựng giao diện thân thiện, hiển thị tốt 
 
 ## 1.3. Yêu cầu phi chức năng
 
-- **Giao diện**: tiếng Việt có dấu, hiện đại, bố cục rõ ràng; **responsive** – hiển thị tốt trên máy tính, máy tính bảng và điện thoại.
+- **Giao diện**: tiếng Việt có dấu, gọn và nhất quán (một màu chính navy, một màu nhấn vàng, thang xám trung tính; font Be Vietnam Pro); tương phản chữ đạt chuẩn **WCAG AA**, dùng được bằng bàn phím; **responsive** – hiển thị tốt trên máy tính, máy tính bảng và điện thoại.
 - **Dễ sử dụng**: khách không cần đăng ký tài khoản; các thao tác chính (tìm nhà, đặt lịch) chỉ cần vài bước; thông báo lỗi và thông báo thành công rõ ràng.
 - **Bảo mật**: trang quản trị phải đăng nhập; chống giả mạo yêu cầu (CSRF), chống SQL Injection, chống XSS; mật khẩu không lưu dạng văn bản gốc;
   chỉ cho phép upload ảnh hợp lệ có dung lượng giới hạn.
@@ -137,7 +137,7 @@ Bootstrap 5 không còn phụ thuộc jQuery, cung cấp:
 - **Hệ thống lưới (Grid)** 12 cột với các breakpoint `sm`, `md`, `lg`, `xl`, `xxl` giúp bố cục tự co giãn theo kích thước màn hình.
 - **Component** dựng sẵn: navbar, dropdown, card, table, form, button, badge, alert, pagination, breadcrumb, accordion, offcanvas...
 - **Utility class**: khoảng cách (`m-*`, `p-*`), flexbox (`d-flex`, `gap-*`), màu sắc, chữ, hiển thị theo màn hình (`d-none d-lg-block`).
-- **CSS variables** cho phép đổi màu chủ đạo dễ dàng (đồ án dùng màu xanh ngọc `#0f766e` và cam `#f97316`).
+- **CSS variables** cho phép tùy biến màu, bo góc, khoảng cách mà không phải biên dịch lại Bootstrap. Đồ án gom các biến vào file `Content/theme.css`: màu chính navy `#1F3B66`, màu nhấn vàng `#F2B544` (chỉ cho nút Tìm nhà, Gửi yêu cầu), bo góc 8px/6px, khoảng cách bội số 8px, font Be Vietnam Pro.
 
 Kèm theo là bộ **Bootstrap Icons** (hơn 2.000 biểu tượng dạng font). Cả hai được copy trực tiếp vào thư mục `Content` và `Scripts`
 của project (lấy từ npm), không phụ thuộc CDN nên website chạy được cả khi không có Internet.
@@ -234,11 +234,11 @@ flowchart TD
 
 | Trang | URL | Mô tả |
 |---|---|---|
-| Trang chủ | `/` | Banner kèm form tìm kiếm nhanh, thống kê (số nhà, số nhà còn trống, số quận, số lượt đặt lịch), 4 thẻ loại nhà kèm số lượng, 6 nhà còn trống mới đăng, khối "Vì sao chọn RentHouse" và lời kêu gọi liên hệ. |
-| Danh sách nhà theo loại | `/House/Index/{id}` | Tiêu đề theo loại đang chọn, các nút lọc nhanh theo loại, lưới thẻ nhà 3 cột (ảnh, trạng thái, giá, tiêu đề, địa chỉ, diện tích, số phòng ngủ), phân trang 9 nhà/trang. |
-| Tìm kiếm | `/House/Search` | Cột trái là bộ lọc (từ khóa, loại, quận, khoảng giá, diện tích, số phòng ngủ, chỉ nhà còn trống); cột phải là số kết quả, ô sắp xếp và danh sách kết quả có phân trang (giữ nguyên điều kiện lọc khi chuyển trang). |
-| Chi tiết nhà | `/House/Details/{id}` | Ảnh lớn, thông tin đầy đủ, mô tả, bảng tổng quan; cột phải là form đặt lịch xem nhà (ẩn nếu nhà đã thuê); cuối trang là 4 nhà cùng loại. |
-| Giới thiệu, Liên hệ | `/Home/About`, `/Home/Contact` | Thông tin giới thiệu, sứ mệnh; thông tin liên hệ, hướng dẫn đặt lịch, câu hỏi thường gặp. |
+| Trang chủ | `/` | Ảnh lớn đầu trang, khung tìm kiếm trắng đè lên mép dưới ảnh với tiêu đề, một câu số liệu (số tin, số quận, số nhà còn trống) và thanh tìm kiếm một hàng; mục "Tìm theo loại nhà" gồm 4 thẻ ảnh có tên và số lượng; mục "Nhà mới đăng" là lưới 6 thẻ nhà còn trống. |
+| Danh sách nhà theo loại | `/House/Index/{id}` | Tiêu đề theo loại đang chọn, thanh chữ chọn loại nhà (mục đang xem được gạch chân), bộ lọc cột trái dính khi cuộn (trên điện thoại là nút "Bộ lọc" mở khung trượt), dòng "12 nhà" và ô sắp xếp, lưới thẻ nhà 3 cột / 2 cột / 1 cột theo màn hình, phân trang 9 nhà/trang. Mỗi thẻ: ảnh 4:3, giá đặt trước, tiêu đề tối đa 2 dòng, dòng "80 m² · 3 PN · Bình Thạnh", nhãn "Đã thuê" chỉ khi nhà đã thuê. |
+| Tìm kiếm | `/House/Search` | Cùng bố cục với trang danh sách: bộ lọc cột trái (từ khóa, loại, quận, mức giá, diện tích, số phòng ngủ, chỉ nhà còn trống), dòng số kết quả, ô sắp xếp, lưới kết quả có phân trang (giữ nguyên điều kiện lọc khi chuyển trang). |
+| Chi tiết nhà | `/House/Details/{id}` | Ảnh lớn, tiêu đề, địa chỉ, dòng thông số nhanh (diện tích, phòng ngủ, quận), bảng thông số dạng danh sách 2 cột, mô tả giữ nguyên xuống dòng; cột phải là hộp đặt lịch dính khi cuộn, giá ở đầu hộp (ẩn form nếu nhà đã thuê); cuối trang là 4 nhà cùng loại. |
+| Giới thiệu, Liên hệ | `/Home/About`, `/Home/Contact` | Giới thiệu ngắn về website kèm số liệu hiện tại; thông tin liên hệ, 3 bước đặt lịch xem nhà, câu hỏi thường gặp. |
 | Trang lỗi | `/Error/NotFound`, `/Error/ServerError` | Thông báo thân thiện khi không tìm thấy trang (404) hoặc hệ thống gặp lỗi (500). |
 
 ### 2.3.2. Nhóm trang quản trị (Area Admin, dùng `_AdminLayout.cshtml`)
@@ -246,7 +246,7 @@ flowchart TD
 | Trang | URL | Mô tả |
 |---|---|---|
 | Đăng nhập | `/Admin/Account/Login` | Form đăng nhập riêng (không dùng layout), có kiểm tra dữ liệu và thông báo sai tài khoản. |
-| Dashboard | `/Admin` | 4 thẻ thống kê, bảng 5 yêu cầu mới nhất, các nút thao tác nhanh, tỉ lệ lấp đầy. |
+| Dashboard (Tổng quan) | `/Admin` | 3 ô số liệu (tổng số nhà, nhà còn trống, yêu cầu chờ duyệt) và bảng 5 yêu cầu mới nhất, nút "Đăng nhà mới". |
 | Loại nhà | `/Admin/Category` | Bảng loại nhà kèm số nhà; trang thêm, sửa, xác nhận xóa. |
 | Nhà cho thuê | `/Admin/House` | Bảng nhà có ảnh thu nhỏ, lọc theo từ khóa / loại / trạng thái, phân trang 10 dòng; nút đổi trạng thái nhanh; trang thêm/sửa có upload và xem trước ảnh; trang xác nhận xóa. |
 | Yêu cầu thuê | `/Admin/RentalRequest` | Tab lọc theo trạng thái kèm số lượng, bảng yêu cầu có nút duyệt / hủy / xóa / chi tiết; trang chi tiết yêu cầu. |
@@ -377,7 +377,7 @@ Quận 7, Quận 10, Gò Vấp, Tân Bình, Phú Nhuận, TP. Thủ Đức với
 
 | STT | Chức năng | Các bước thực hiện | Dữ liệu thử | Kết quả mong đợi | Kết quả |
 |---|---|---|---|---|---|
-| 1 | Trang chủ | Mở `http://localhost:50780/` | – | Hiện banner, ô tìm kiếm, 4 loại nhà, 6 nhà còn trống mới đăng; giá dạng `6.500.000 đ/tháng` | |
+| 1 | Trang chủ | Mở `http://localhost:50780/` | – | Hiện ảnh đầu trang, thanh tìm kiếm, 4 loại nhà, 6 nhà còn trống mới đăng; giá dạng `6.500.000 đ/tháng` | |
 | 2 | Xem nhà theo loại | Menu Nhà cho thuê → Căn hộ mini | id = 4 | URL `/House/Index/4`, chỉ hiện nhà loại Căn hộ mini | |
 | 3 | Phân trang | Mở `/House`, bấm trang 2 | 12 nhà | Trang 1 có 9 nhà, trang 2 có 3 nhà | |
 | 4 | Loại nhà không tồn tại | Mở `/House/Index/999` | id = 999 | Hiện trang lỗi 404 thân thiện | |
@@ -404,7 +404,7 @@ Quận 7, Quận 10, Gò Vấp, Tân Bình, Phú Nhuận, TP. Thủ Đức với
 | 25 | Đổi mật khẩu | Mật khẩu cũ sai / nhập lại không khớp / hợp lệ | – | Báo lỗi tương ứng; hợp lệ thì đổi thành công, đăng nhập lại bằng mật khẩu mới | |
 | 26 | Đăng xuất | Bấm Đăng xuất | – | Về trang đăng nhập, không vào lại được `/Admin` | |
 | 27 | Trang 404 | Mở `/abc/xyz` | – | Hiện trang 404 thân thiện | |
-| 28 | Responsive | Thu nhỏ trình duyệt / F12 → chế độ điện thoại | – | Menu thu gọn thành nút ☰, lưới nhà 1 cột, menu admin trượt ra | |
+| 28 | Responsive | Thu nhỏ trình duyệt / F12 → chế độ điện thoại | – | Menu thu gọn thành nút ☰, bộ lọc thành nút "Bộ lọc" mở khung trượt, lưới nhà 1 cột, menu admin trượt ra | |
 
 ### 3.5.2. Xuất bản (Publish) lên IIS
 
@@ -436,13 +436,14 @@ Quận 7, Quận 10, Gò Vấp, Tân Bình, Phú Nhuận, TP. Thủ Đức với
   đặt lịch xem nhà; quản lý loại nhà, nhà (kèm upload ảnh), yêu cầu thuê, dashboard thống kê, đổi mật khẩu.
 - Thiết kế cơ sở dữ liệu **RentHouseDB** gồm 4 bảng chuẩn hóa với đầy đủ ràng buộc được đặt tên rõ ràng; áp dụng **Entity Framework 6**
   theo hướng **Database First** với các lớp entity và DbContext viết tay khớp chính xác với script.
-- Giao diện tiếng Việt hiện đại, **responsive** nhờ Bootstrap 5; định dạng giá tiền theo kiểu Việt Nam; ảnh minh họa và ảnh placeholder.
+- Giao diện tiếng Việt gọn gàng theo một hệ thống thiết kế thống nhất (màu, font, khoảng cách, bo góc định nghĩa bằng biến CSS), **responsive** nhờ Bootstrap 5, kiểm tra ở các bề rộng 375px, 768px, 1280px và đạt chuẩn tương phản WCAG AA; định dạng giá tiền theo kiểu Việt Nam; ảnh "Chưa có ảnh" cho nhà chưa có ảnh.
 - Áp dụng nhiều biện pháp **bảo mật**: filter kiểm tra đăng nhập, băm mật khẩu SHA256, chống CSRF, SQL Injection, XSS, overposting,
   kiểm tra file upload, trang lỗi thân thiện.
 - Nắm vững quy trình xây dựng một ứng dụng web: phân tích yêu cầu, thiết kế cơ sở dữ liệu, lập trình theo MVC, kiểm thử và triển khai.
 
 ## 4.2. Hạn chế
 
+- Ảnh của 11 nhà mẫu và ảnh đầu trang chủ đang là khung xám, cần thay bằng ảnh thật trước khi trình bày (xem README, mục Ảnh nhà).
 - Mỗi nhà chỉ có **một ảnh đại diện**, chưa có thư viện nhiều ảnh, video hay bản đồ vị trí.
 - Khách chưa có tài khoản riêng nên không theo dõi được lịch sử yêu cầu, chưa có chức năng lưu nhà yêu thích.
 - Chưa gửi **email / SMS** thông báo khi yêu cầu được duyệt hoặc hủy.

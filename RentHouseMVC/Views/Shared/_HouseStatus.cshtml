@@ -1,0 +1,3 @@
+﻿@model string
+@* Nhãn trạng thái nhà: Còn trống / Đã thuê *@
+<span class="status @(Model == HouseStatus.Available ? "status-available" : "status-rented")">@Model</span>

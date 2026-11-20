@@ -1,20 +1,10 @@
 ﻿/* =====================================================================
-   RentHouse - JavaScript trang quản trị
+   RentHouse – JavaScript trang quản trị
+   Lỗi nhập liệu dùng class mặc định của jQuery Validation Unobtrusive
+   (input-validation-error, field-validation-error) – kiểu nằm trong theme.css.
    ===================================================================== */
 (function ($) {
     'use strict';
-
-    // Hiển thị lỗi của jQuery Validation theo kiểu Bootstrap 5
-    if ($.validator) {
-        $.validator.setDefaults({
-            highlight: function (element) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element) {
-                $(element).removeClass('is-invalid input-validation-error');
-            }
-        });
-    }
 
     // Form có data-confirm: hỏi lại trước khi gửi (xóa, hủy, đổi trạng thái...)
     $(document).on('submit', 'form[data-confirm]', function (e) {
@@ -23,7 +13,7 @@
         }
     });
 
-    // Kiểm tra ảnh upload ngay ở trình duyệt: đúng định dạng, dưới 2MB, xem trước ảnh
+    // Kiểm tra ảnh ngay ở trình duyệt: đúng định dạng, dưới 2MB, xem trước ảnh
     $(document).on('change', 'input[type=file][data-max-size]', function () {
         var input = this;
         var maxSize = parseInt($(input).attr('data-max-size'), 10);
@@ -37,12 +27,12 @@
 
         var file = input.files[0];
         if (!/\.(jpe?g|png|webp)$/i.test(file.name)) {
-            $error.text('Chỉ chấp nhận ảnh định dạng JPG, PNG hoặc WEBP.');
+            $error.text('Chỉ nhận ảnh JPG, PNG hoặc WEBP.');
             input.value = '';
             return;
         }
         if (file.size > maxSize) {
-            $error.text('Dung lượng ảnh phải nhỏ hơn 2MB (ảnh đã chọn: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB).');
+            $error.text('Ảnh phải nhỏ hơn 2MB (ảnh đã chọn: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB).');
             input.value = '';
             return;
         }
@@ -51,7 +41,7 @@
         }
     });
 
-    // Hiển thị giá đã định dạng ngay dưới ô nhập giá: 6500000 => 6.500.000 đ/tháng
+    // Hiển thị giá đã định dạng dưới ô nhập: 6500000 => 6.500.000 đ/tháng
     var $price = $('#Price');
     var $pricePreview = $('#pricePreview');
     function updatePricePreview() {
@@ -60,7 +50,7 @@
             $pricePreview.text('');
             return;
         }
-        $pricePreview.text('= ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ/tháng');
+        $pricePreview.text(value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ/tháng');
     }
     if ($price.length && $pricePreview.length) {
         $price.on('input', updatePricePreview);

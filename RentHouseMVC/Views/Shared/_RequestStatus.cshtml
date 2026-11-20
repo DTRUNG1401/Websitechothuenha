@@ -1,0 +1,8 @@
+﻿@model string
+@* Nhãn trạng thái yêu cầu thuê: Chờ duyệt (viền navy) / Đã duyệt (nền navy) / Đã hủy (xám) *@
+@{
+    string css = Model == RequestStatus.Pending ? "status-pending"
+        : Model == RequestStatus.Approved ? "status-approved"
+        : "status-cancelled";
+}
+<span class="status @css">@Model</span>

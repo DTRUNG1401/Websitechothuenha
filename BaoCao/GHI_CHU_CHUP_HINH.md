@@ -14,6 +14,8 @@ Tài liệu này hướng dẫn chụp từng hình trong **Chương 3** theo m�
 4. Khi chụp trang web: dùng Chrome/Edge, cửa sổ rộng khoảng 1366px, zoom 100%. Muốn chụp **cả trang dài** thì
    bấm **F12 → Ctrl+Shift+P → gõ "Capture full size screenshot"**.
 5. Số dòng dưới đây tính theo file trong repo (có thể lệch 1–2 dòng nếu bạn đã sửa code).
+6. Ảnh nhà hiện là **khung xám** (chưa có ảnh thật). Nên chép ảnh thật vào `RentHouseMVC/Content/images` trước khi
+   chụp kết quả – xem mục "Ảnh nhà" trong `README.md`.
 
 ---
 
@@ -22,9 +24,9 @@ Tài liệu này hướng dẫn chụp từng hình trong **Chương 3** theo m�
 | | |
 |---|---|
 | File | `RentHouseMVC/Views/Shared/_Layout.cshtml` |
-| Đoạn nên chụp | **Dòng 13 – 80**: phần `<head>` (link Bootstrap, Bootstrap Icons, site.css), thanh điều hướng `<nav>` và `@RenderBody()` |
-| Chụp thêm (nếu cần) | Dòng 82 – 137: `<footer>` và các thẻ `<script>`, `@RenderSection("scripts", required: false)` |
-| Hình phụ cho Admin | `RentHouseMVC/Areas/Admin/Views/Shared/_AdminLayout.cshtml` (dòng 1 – 68: menu bên trái; dòng 70 – 105: thanh trên và `@RenderBody()`) |
+| Đoạn nên chụp | **Dòng 13 – 78**: phần `<head>` (link Bootstrap, Bootstrap Icons, theme.css, site.css), header có menu `<nav>` và `@RenderBody()` |
+| Chụp thêm (nếu cần) | Dòng 80 – 127: `<footer>` và các thẻ `<script>`, `@RenderSection("scripts", required: false)` |
+| Hình phụ cho Admin | `RentHouseMVC/Areas/Admin/Views/Shared/_AdminLayout.cshtml` (dòng 27 – 60: menu bên trái; dòng 62 – 82: thanh trên và `@RenderBody()`) |
 
 Gợi ý chú thích: *"Layout page _Layout.cshtml dùng chung cho các trang phía khách: khai báo Bootstrap, menu điều hướng
 (menu loại nhà lấy từ database bằng child action `Html.Action("CategoryMenu", "Home")`) và vị trí `@RenderBody()`."*
@@ -126,8 +128,8 @@ Sau đó chuột phải **Database Diagrams → Refresh** và làm lại bước
 | | |
 |---|---|
 | File | `RentHouseMVC/Views/House/Index.cshtml` |
-| Đoạn nên chụp | **Dòng 1 – 78** (toàn bộ): `@model HouseListViewModel`, breadcrumb, nút lọc theo loại nhà (`@foreach (var c in Model.Categories)`), lưới nhà (`@foreach (var house in Model.Houses)` + `@Html.Partial("_HouseCard", house)`) và thanh phân trang `_Pager` |
-| Chụp kèm | `RentHouseMVC/Views/Shared/_HouseCard.cshtml` (dòng 1 – 27): thẻ hiển thị 1 nhà – ảnh, giá `DisplayHelper.FormatPrice`, trạng thái |
+| Đoạn nên chụp | Chia 2 hình: **dòng 1 – 52** (`@model HouseListViewModel`, tiêu đề trang, thanh loại nhà `@foreach (var c in Model.Categories)`) và **dòng 54 – 105** (bộ lọc `@Html.Partial("_HouseFilter", filter)`, dòng "12 nhà" + ô sắp xếp, lưới nhà `@foreach (var house in Model.Houses)` + `@Html.Partial("_HouseCard", house)`, thanh phân trang `_Pager`) |
+| Chụp kèm | `RentHouseMVC/Views/Shared/_HouseCard.cshtml` (dòng 1 – 24): thẻ hiển thị 1 nhà – ảnh, giá `DisplayHelper.FormatMoney`, tiêu đề, dòng "80 m² · 3 PN · Bình Thạnh", nhãn "Đã thuê" |
 
 ---
 
@@ -136,7 +138,8 @@ Sau đó chuột phải **Database Diagrams → Refresh** và làm lại bước
 1. Chạy project (**F5**).
 2. Cách 1 – tất cả nhà: trên menu bấm **Nhà cho thuê → Tất cả nhà** (URL `http://localhost:50780/House`).
    Có 12 nhà mẫu nên trang 1 hiện 9 nhà và **thanh phân trang** có trang 2 → nên chụp phần cuối trang để thấy phân trang.
-3. Cách 2 – theo loại: **Nhà cho thuê → Căn hộ mini** (URL `http://localhost:50780/House/Index/4`); nút "Căn hộ mini" được tô màu.
+3. Cách 2 – theo loại: **Nhà cho thuê → Căn hộ mini** (URL `http://localhost:50780/House/Index/4`); mục "Căn hộ mini" trên thanh loại nhà được gạch chân.
+   Trên máy tính, bộ lọc nằm ở cột trái; thu nhỏ cửa sổ dưới 992px thì bộ lọc chuyển thành nút **Bộ lọc** mở khung trượt.
 4. Chụp cả trang (F12 → Ctrl+Shift+P → *Capture full size screenshot*) hoặc chụp phần banner + 2 hàng nhà đầu.
 5. Hình phụ gợi ý: trang tìm kiếm `http://localhost:50780/House/Search?district=Bình Thạnh&sort=gia-tang` để minh họa chức năng lọc/sắp xếp.
 
@@ -147,16 +150,16 @@ Sau đó chuột phải **Database Diagrams → Refresh** và làm lại bước
 | | |
 |---|---|
 | File | `RentHouseMVC/Views/House/Details.cshtml` |
-| Đoạn nên chụp | Chia 2–3 hình: **dòng 1 – 90** (thông tin nhà: ảnh, tiêu đề, giá, diện tích, mô tả, bảng tổng quan), **dòng 92 – 170** (form đặt lịch: `@if (Model.CanRequest)`, `Html.BeginForm("SendRequest", ...)`, `@Html.AntiForgeryToken()`, `TextBoxFor`/`ValidationMessageFor`; nhánh `else` hiện thông báo "Nhà này đã được cho thuê"), **dòng 172 – 204** (nhà cùng loại và `@section scripts` nạp jQuery Validation) |
+| Đoạn nên chụp | Chia 2–3 hình: **dòng 1 – 70** (thông tin nhà: ảnh, tiêu đề, địa chỉ, thông số dạng danh sách 2 cột `spec-list`, mô tả), **dòng 72 – 141** (hộp đặt lịch: giá ở đầu hộp, `@if (Model.CanRequest)`, `Html.BeginForm("SendRequest", ...)`, `@Html.AntiForgeryToken()`, `TextBoxFor`/`ValidationMessageFor`; nhánh `else` hiện "Nhà đã có người thuê"), **dòng 144 – 172** (nhà cùng loại và `@section scripts` nạp jQuery Validation) |
 
 ---
 
 ## Hình 3.x – Kết quả trang Details
 
 1. Từ trang chủ hoặc trang danh sách bấm vào một nhà **Còn trống**, ví dụ `http://localhost:50780/House/Details/10`
-   (Căn hộ mini full nội thất trung tâm Phú Nhuận). Chụp cả trang: ảnh, giá `6.500.000 đ/tháng`, form **Đặt lịch xem nhà** bên phải, các nhà cùng loại bên dưới.
+   (Căn hộ mini full nội thất trung tâm Phú Nhuận). Chụp cả trang: ảnh, thông số, hộp **Đặt lịch xem nhà** bên phải có giá `6.500.000 đ /tháng` ở đầu hộp, các nhà cùng loại bên dưới.
 2. Hình minh họa kiểm tra dữ liệu: bấm **Gửi yêu cầu** khi để trống họ tên / nhập SĐT sai (vd `123`) → chụp các dòng báo lỗi đỏ.
-3. Hình gửi thành công: nhập đủ (vd *Nguyễn Văn B*, *0909123456*, chọn ngày giờ ngày mai) → **Gửi yêu cầu** → chụp thông báo xanh *"Gửi yêu cầu thành công!..."*.
+3. Hình gửi thành công: nhập đủ (vd *Nguyễn Văn B*, *0909123456*, chọn ngày giờ ngày mai) → **Gửi yêu cầu** → chụp thông báo *"Gửi yêu cầu thành công!..."* trong hộp đặt lịch.
    Sau đó vào trang Admin → **Yêu cầu thuê** sẽ thấy yêu cầu mới ở trạng thái *Chờ duyệt* (hình cho phần quản trị).
 4. Hình nhà **Đã thuê** (form bị ẩn): `http://localhost:50780/House/Details/3` hoặc `/House/Details/12`.
 
@@ -167,7 +170,7 @@ Sau đó chuột phải **Database Diagrams → Refresh** và làm lại bước
 | Hình | Cách mở |
 |---|---|
 | Trang đăng nhập | `http://localhost:50780/Admin` (tự chuyển tới `/Admin/Account/Login`) |
-| Dashboard | Đăng nhập `admin` / `123456` |
+| Dashboard (Tổng quan) | Đăng nhập `admin` / `123456` |
 | Quản lý loại nhà | Menu **Loại nhà**; thử **Xóa** loại "Phòng trọ" để chụp thông báo *"Không thể xóa!..."* |
 | Thêm nhà + upload ảnh | Menu **Nhà cho thuê → Đăng nhà mới** |
 | Danh sách yêu cầu | Menu **Yêu cầu thuê**, bấm các tab *Chờ duyệt / Đã duyệt / Đã hủy* |

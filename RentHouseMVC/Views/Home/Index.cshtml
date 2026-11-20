@@ -1,171 +1,122 @@
 ﻿@model RentHouseMVC.Models.ViewModels.HomeViewModel
 @{
-    ViewBag.Title = "Trang chủ";
+    ViewBag.Title = "Nhà cho thuê tại TP.HCM";
+}
+@functions {
+    // Ảnh đại diện cho từng loại nhà (dùng lại ảnh của một căn mẫu thuộc loại đó)
+    private static string TypeImage(string catName)
+    {
+        string name = (catName ?? string.Empty).ToLowerInvariant();
+        if (name.Contains("trọ")) return "~/Content/images/houses/mau-04.jpg";
+        if (name.Contains("mini")) return "~/Content/images/houses/mau-10.jpg";
+        if (name.Contains("chung cư")) return "~/Content/images/houses/mau-07.jpg";
+        if (name.Contains("nguyên căn")) return "~/Content/images/houses/mau-01.jpg";
+        return "~/Content/images/no-image.svg";
+    }
 }
 
-<!-- ===== BANNER + Ô TÌM KIẾM NHANH ===== -->
-<section class="hero">
-    <div class="container position-relative">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-7">
-                <span class="hero-badge"><i class="bi bi-stars me-1"></i>Hơn @Model.AvailableHouses căn nhà đang chờ bạn</span>
-                <h1 class="hero-title">Tìm nhà thuê ưng ý<br />tại <span>TP. Hồ Chí Minh</span></h1>
-                <p class="hero-text">
-                    Nhà nguyên căn, phòng trọ, căn hộ chung cư, căn hộ mini với thông tin rõ ràng, giá minh bạch.
-                    Đặt lịch xem nhà chỉ trong 1 phút.
-                </p>
-
-                <form action="@Url.Action("Search", "House")" method="get" class="quick-search shadow-lg" role="search">
-                    <div class="row g-2">
-                        <div class="col-12">
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                                <input type="text" name="keyword" class="form-control border-start-0" maxlength="100"
-                                       placeholder="Nhập tên đường, khu vực, tên dự án..." aria-label="Từ khóa" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="catId" class="form-select" aria-label="Loại nhà">
-                                <option value="">Tất cả loại nhà</option>
-                                @foreach (var c in Model.Categories)
-                                {
-                                    <option value="@c.Id">@c.CatName</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            @Html.DropDownList("district", SearchOptions.DistrictItems(null), "Tất cả quận/huyện", new { @class = "form-select", aria_label = "Quận/huyện" })
-                        </div>
-                        <div class="col-md-4">
-                            @Html.DropDownList("price", SearchOptions.PriceRangeItems(null), "Mọi mức giá", new { @class = "form-select", aria_label = "Khoảng giá" })
-                        </div>
-                        <div class="col-12 d-grid">
-                            <button type="submit" class="btn btn-accent btn-lg"><i class="bi bi-search me-2"></i>Tìm nhà ngay</button>
+<section class="home-hero" aria-labelledby="home-title">
+    <div class="home-hero-media">
+        <img src="~/Content/images/hero.jpg" alt="Nhà phố ở TP. Hồ Chí Minh" />
+    </div>
+    <div class="container home-search-wrap">
+        <div class="home-search">
+            <h1 id="home-title">Nhà cho thuê tại TP. Hồ Chí Minh</h1>
+            <p class="home-search-lead">
+                @Model.TotalHouses tin cho thuê ở @Model.TotalDistricts quận, huyện, trong đó @Model.AvailableHouses nhà còn trống.
+            </p>
+            <form action="@Url.Action("Search", "House")" method="get" class="search-bar" role="search" aria-label="Tìm nhà cho thuê">
+                <div class="row g-2">
+                    <div class="col-12 col-lg-4">
+                        <label class="visually-hidden" for="hsKeyword">Từ khóa</label>
+                        <div class="search-keyword">
+                            <i class="bi bi-search" aria-hidden="true"></i>
+                            <input type="search" id="hsKeyword" name="keyword" class="form-control" maxlength="100" placeholder="Tên đường, phường, dự án" />
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="col-lg-5 d-none d-lg-block text-center">
-                <img src="~/Content/images/hero.svg" alt="Minh họa tìm nhà" class="img-fluid hero-img" />
-            </div>
-        </div>
-
-        <div class="row g-3 hero-stats">
-            <div class="col-6 col-md-3">
-                <div class="stat"><strong>@Model.TotalHouses</strong><span>Nhà đăng cho thuê</span></div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat"><strong>@Model.AvailableHouses</strong><span>Nhà còn trống</span></div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat"><strong>@Model.TotalDistricts</strong><span>Quận / huyện</span></div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat"><strong>@Model.TotalRequests</strong><span>Lượt đặt lịch xem</span></div>
-            </div>
+                    <div class="col-6 col-lg-2">
+                        <label class="visually-hidden" for="hsCatId">Loại nhà</label>
+                        <select id="hsCatId" name="catId" class="form-select">
+                            <option value="">Mọi loại nhà</option>
+                            @foreach (var c in Model.Categories)
+                            {
+                                <option value="@c.Id">@c.CatName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <label class="visually-hidden" for="hsDistrict">Quận, huyện</label>
+                        <select id="hsDistrict" name="district" class="form-select">
+                            <option value="">Mọi khu vực</option>
+                            @foreach (var item in SearchOptions.DistrictItems(null))
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <label class="visually-hidden" for="hsPrice">Mức giá</label>
+                        <select id="hsPrice" name="price" class="form-select">
+                            <option value="">Mọi mức giá</option>
+                            @foreach (var item in SearchOptions.PriceRangeItems(null))
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <button type="submit" class="btn btn-accent"><i class="bi bi-search" aria-hidden="true"></i>Tìm nhà</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </section>
 
-<!-- ===== CÁC LOẠI NHÀ ===== -->
-<section class="container section">
-    <div class="section-heading">
-        <div>
-            <span class="section-kicker">Danh mục</span>
-            <h2>Các loại nhà cho thuê</h2>
-        </div>
-        <a href="@Url.Action("Index", "House", new { id = "" })" class="btn btn-link fw-semibold">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+<section class="container section" aria-labelledby="types-title">
+    <div class="section-head">
+        <h2 id="types-title">Tìm theo loại nhà</h2>
+        <a href="@Url.Action("Index", "House", new { id = "" })">Xem tất cả nhà</a>
     </div>
     <div class="row g-3 g-lg-4">
         @foreach (var c in Model.Categories)
         {
             <div class="col-6 col-lg-3">
-                <a href="@Url.Action("Index", "House", new { id = c.Id })" class="category-card h-100">
-                    <span class="category-icon"><i class="bi @DisplayHelper.CategoryIcon(c.CatName)"></i></span>
-                    <h3>@c.CatName</h3>
-                    <p class="mb-0"><strong>@c.HouseCount</strong> nhà &middot; <span class="text-success">@c.AvailableCount còn trống</span></p>
-                </a>
-            </div>
-        }
-    </div>
-</section>
-
-<!-- ===== NHÀ MỚI ĐĂNG ===== -->
-<section class="section section-soft">
-    <div class="container">
-        <div class="section-heading">
-            <div>
-                <span class="section-kicker">Mới cập nhật</span>
-                <h2>Nhà mới đăng</h2>
-            </div>
-            <a href="@Url.Action("Search", "House", new { sort = "moi-nhat" })" class="btn btn-link fw-semibold">Xem thêm <i class="bi bi-arrow-right"></i></a>
-        </div>
-        @if (Model.LatestHouses.Count == 0)
-        {
-            <div class="empty-state">
-                <i class="bi bi-house-x"></i>
-                <p>Hiện chưa có nhà nào còn trống. Vui lòng quay lại sau.</p>
-            </div>
-        }
-        else
-        {
-            <div class="row g-4">
-                @foreach (var house in Model.LatestHouses)
-                {
-                    <div class="col-md-6 col-lg-4">
-                        @Html.Partial("_HouseCard", house)
+                <div class="type-card">
+                    <div class="type-card-media">
+                        <img src="@Url.Content(TypeImage(c.CatName))" alt="Ảnh minh họa @c.CatName" loading="lazy" />
                     </div>
-                }
+                    <div class="type-card-body">
+                        <a class="type-card-name" href="@Url.Action("Index", "House", new { id = c.Id })">@c.CatName</a>
+                        <span class="type-card-count">@c.HouseCount nhà · @c.AvailableCount còn trống</span>
+                    </div>
+                </div>
             </div>
         }
     </div>
 </section>
 
-<!-- ===== VÌ SAO CHỌN RENTHOUSE ===== -->
-<section class="container section">
-    <div class="text-center mb-4">
-        <span class="section-kicker">Lợi ích</span>
-        <h2>Vì sao chọn RentHouse?</h2>
+<section class="container section" aria-labelledby="latest-title">
+    <div class="section-head">
+        <h2 id="latest-title">Nhà mới đăng</h2>
+        <a href="@Url.Action("Search", "House", new { onlyAvailable = "true" })">Xem tất cả nhà còn trống</a>
     </div>
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-box">
-                <i class="bi bi-patch-check"></i>
-                <h3>Thông tin rõ ràng</h3>
-                <p>Giá, diện tích, địa chỉ, tình trạng nhà được cập nhật đầy đủ.</p>
-            </div>
+    @if (Model.LatestHouses.Count == 0)
+    {
+        <div class="empty-state">
+            <h3 class="h5">Chưa có nhà còn trống</h3>
+            <p class="mb-0">Các căn đang trống sẽ hiện ở đây.</p>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-box">
-                <i class="bi bi-calendar-check"></i>
-                <h3>Đặt lịch nhanh</h3>
-                <p>Gửi yêu cầu xem nhà trực tuyến, không cần tạo tài khoản.</p>
-            </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var house in Model.LatestHouses)
+            {
+                <div class="col-sm-6 col-lg-4">
+                    @Html.Partial("_HouseCard", house)
+                </div>
+            }
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-box">
-                <i class="bi bi-funnel"></i>
-                <h3>Lọc thông minh</h3>
-                <p>Tìm theo quận, khoảng giá, diện tích, số phòng ngủ chỉ với vài cú nhấp.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-box">
-                <i class="bi bi-headset"></i>
-                <h3>Hỗ trợ tận tình</h3>
-                <p>Đội ngũ tư vấn sẵn sàng hỗ trợ bạn từ 8:00 đến 21:00 mỗi ngày.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== KÊU GỌI HÀNH ĐỘNG ===== -->
-<section class="container">
-    <div class="cta-box">
-        <div>
-            <h2>Bạn cần tư vấn tìm nhà?</h2>
-            <p class="mb-0">Liên hệ RentHouse để được giới thiệu căn nhà phù hợp nhất với nhu cầu và ngân sách.</p>
-        </div>
-        <a href="@Url.Action("Contact", "Home")" class="btn btn-light btn-lg fw-semibold"><i class="bi bi-telephone me-2"></i>Liên hệ ngay</a>
-    </div>
+    }
 </section>
