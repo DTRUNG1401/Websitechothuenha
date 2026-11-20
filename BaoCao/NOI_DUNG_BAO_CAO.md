@@ -443,7 +443,7 @@ Quận 7, Quận 10, Gò Vấp, Tân Bình, Phú Nhuận, TP. Thủ Đức với
 
 ## 4.2. Hạn chế
 
-- Ảnh của 11 nhà mẫu và ảnh đầu trang chủ đang là khung xám, cần thay bằng ảnh thật trước khi trình bày (xem README, mục Ảnh nhà).
+- Ảnh nhà mẫu là ảnh minh họa miễn phí bản quyền từ Pexels, không phải ảnh chụp thật của từng căn nhà cho thuê.
 - Mỗi nhà chỉ có **một ảnh đại diện**, chưa có thư viện nhiều ảnh, video hay bản đồ vị trí.
 - Khách chưa có tài khoản riêng nên không theo dõi được lịch sử yêu cầu, chưa có chức năng lưu nhà yêu thích.
 - Chưa gửi **email / SMS** thông báo khi yêu cầu được duyệt hoặc hủy.

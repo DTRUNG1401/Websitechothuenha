@@ -181,7 +181,7 @@ Khi chạy trên máy cá nhân (localhost), trang lỗi 500 hiển thị thêm 
 | Phân trang | Tự viết `PagedList<T>` + partial `_Pager` | Không cài thêm thư viện (đúng yêu cầu). Khách 9 nhà/trang, Admin 10 dòng/trang. |
 | Định dạng số | `globalization culture="en-US"`, giá hiển thị bằng `DisplayHelper.FormatPrice` | Client (jQuery Validate) và server đọc số `45.5` giống nhau; giá vẫn hiển thị kiểu Việt Nam `12.000.000 đ/tháng`. |
 | Thư viện JS | jQuery, jQuery Validation lấy từ npm và copy vào `Scripts/` | Giống cách lấy Bootstrap; giảm số gói NuGet. Không dùng `System.Web.Optimization` (bundling) để project gọn. |
-| Ảnh mẫu | 11 file `mau-XX.jpg` + `hero.jpg` (hiện là khung xám, xem mục 10) + 1 nhà để trống ảnh (hiện `no-image.svg`) | Đổi ảnh chỉ cần chép đè file, không phải sửa code hay database. Ảnh upload mới lưu ở `Content/images/houses` với tên GUID. |
+| Ảnh mẫu | 11 file `mau-XX.jpg` + `hero.jpg` (ảnh thật từ Pexels, nguồn ở mục 11) + 1 nhà để trống ảnh (hiện `no-image.svg`) | Đổi ảnh chỉ cần chép đè file, không phải sửa code hay database. Ảnh upload mới lưu ở `Content/images/houses` với tên GUID. |
 | Đăng xuất | Form POST có AntiForgeryToken | Tránh bị đăng xuất bằng link giả mạo (CSRF). |
 | HTTPS | Tắt SSL của IIS Express | Chạy được ngay, không phải cài chứng chỉ khi F5. Khi publish thật nên bật HTTPS. |
 | Port | `http://localhost:50780/` | Cố định để tài liệu hướng dẫn nhất quán. |
@@ -227,34 +227,45 @@ File CSS: `Content/theme.css` (biến màu, font, tùy biến Bootstrap – dùn
 
 ## 11. Ảnh nhà
 
-Môi trường dùng để viết project **không tải được ảnh** từ Unsplash/Pexels (mạng chặn các máy chủ ảnh), nên các ảnh
-hiện là **khung xám trung tính**, đặt sẵn đúng tên file. Muốn dùng ảnh thật, chỉ cần **chép đè** các file sau
-(giữ nguyên tên, không phải sửa code hay database):
+Project đã có sẵn **12 ảnh thật** lấy từ **Pexels** (miễn phí bản quyền), đã cắt về tỉ lệ 4:3 và nén dưới 200KB.
+Muốn đổi ảnh khác, chỉ cần **chép đè** file cùng tên (không phải sửa code hay database):
 
-| File | Dùng cho | Gợi ý ảnh |
+| File | Dùng cho | Nội dung ảnh |
 |---|---|---|
-| `Content/images/hero.jpg` | Ảnh lớn đầu trang chủ | Phố hoặc nhà ở TP.HCM, ngang, khoảng 1920×640 |
-| `Content/images/houses/mau-01.jpg` | Nhà 1 + ảnh mục "Nhà nguyên căn" ở trang chủ | Nhà phố 1 trệt 2 lầu |
-| `Content/images/houses/mau-02.jpg` | Nhà 2 | Nhà mặt tiền |
-| `Content/images/houses/mau-03.jpg` | Nhà 3 | Nhà trong hẻm |
-| `Content/images/houses/mau-04.jpg` | Nhà 4 + ảnh mục "Phòng trọ" | Phòng trọ có gác lửng |
-| `Content/images/houses/mau-05.jpg` | Nhà 5 | Phòng trọ sinh viên |
-| `Content/images/houses/mau-07.jpg` | Nhà 7 + ảnh mục "Căn hộ chung cư" | Phòng khách căn hộ |
-| `Content/images/houses/mau-08.jpg` | Nhà 8 | Căn hộ 3 phòng ngủ |
-| `Content/images/houses/mau-09.jpg` | Nhà 9 | Căn hộ 1 phòng ngủ |
-| `Content/images/houses/mau-10.jpg` | Nhà 10 + ảnh mục "Căn hộ mini" | Căn hộ mini/studio |
-| `Content/images/houses/mau-11.jpg` | Nhà 11 | Căn hộ mini có ban công |
-| `Content/images/houses/mau-12.jpg` | Nhà 12 | Căn hộ mini 2 phòng ngủ |
+| `Content/images/hero.jpg` | Ảnh lớn đầu trang chủ | Toàn cảnh TP.HCM nhìn từ trên cao, sông Sài Gòn (1920×640) |
+| `Content/images/houses/mau-01.jpg` | Nhà 1 + ảnh mục "Nhà nguyên căn" ở trang chủ | Dãy nhà phố cũ tường vàng |
+| `Content/images/houses/mau-02.jpg` | Nhà 2 | Đầu hẻm khu dân cư, nhà phố nhiều tầng |
+| `Content/images/houses/mau-03.jpg` | Nhà 3 | Nhà trong hẻm nhỏ |
+| `Content/images/houses/mau-04.jpg` | Nhà 4 + ảnh mục "Phòng trọ" | Phòng ngủ nhỏ, giường đôi |
+| `Content/images/houses/mau-05.jpg` | Nhà 5 | Phòng ngủ đơn giản, tường sáng |
+| `Content/images/houses/mau-07.jpg` | Nhà 7 + ảnh mục "Căn hộ chung cư" | Phòng khách căn hộ, sofa nâu, cửa kính nhìn ra phố |
+| `Content/images/houses/mau-08.jpg` | Nhà 8 | Phòng khách rộng, sofa góc trắng |
+| `Content/images/houses/mau-09.jpg` | Nhà 9 | Phòng khách sofa xanh |
+| `Content/images/houses/mau-10.jpg` | Nhà 10 + ảnh mục "Căn hộ mini" | Studio: giường, vách gỗ, bếp |
+| `Content/images/houses/mau-11.jpg` | Nhà 11 | Căn hộ mini có quầy bếp, cửa kính lớn |
+| `Content/images/houses/mau-12.jpg` | Nhà 12 | Căn hộ mini: phòng khách liền bếp |
 
 Nhà số 6 cố ý để trống ảnh để minh họa ảnh "Chưa có ảnh" (`no-image.svg`).
 
-Yêu cầu: ảnh ngang tỉ lệ khoảng 4:3 (khoảng 1200×900), định dạng `.jpg`, **dưới 200KB** (nén bằng https://squoosh.app, chất lượng 70–75).
-Nguồn ảnh miễn phí bản quyền: **Unsplash** (https://unsplash.com/license) hoặc **Pexels** (https://www.pexels.com/license/).
-Hai giấy phép này không bắt buộc ghi nguồn, nhưng nên ghi lại để báo cáo minh bạch. Sau khi thay ảnh, điền bảng dưới đây:
+Khi tự thay ảnh: ảnh ngang tỉ lệ khoảng 4:3 (khoảng 1200×900), định dạng `.jpg`, **dưới 200KB** (nén bằng https://squoosh.app,
+chất lượng 70–75). Nguồn ảnh miễn phí bản quyền: **Unsplash** (https://unsplash.com/license) hoặc **Pexels** (https://www.pexels.com/license/).
 
-| File | Tác giả | Nguồn (link trang ảnh) |
+**Nguồn ảnh đang dùng** – tất cả theo [Giấy phép Pexels](https://www.pexels.com/license/): được dùng miễn phí, được chỉnh sửa
+(cắt, nén), không bắt buộc ghi tên tác giả. Tên tác giả và ảnh gốc xem ở trang ảnh; cột "Tác giả" ghi những tên đã biết.
+
+| File | Tác giả | Nguồn (trang ảnh trên Pexels) |
 |---|---|---|
-| hero.jpg | | |
-| mau-01.jpg … mau-12.jpg | | |
+| hero.jpg | – | https://www.pexels.com/photo/aerial-view-of-ho-chi-minh-city-vietnam-6877732/ |
+| mau-01.jpg | – | https://www.pexels.com/photo/empty-road-between-houses-7216816/ |
+| mau-02.jpg | – | https://www.pexels.com/photo/truck-near-residential-building-in-city-in-vietnam-20393792/ |
+| mau-03.jpg | Loriz E | https://www.pexels.com/photo/33575114/ |
+| mau-04.jpg | – | https://www.pexels.com/photo/13871317/ |
+| mau-05.jpg | Lisa Anna | https://www.pexels.com/photo/interior-of-a-modern-minimalist-bedroom-with-a-single-bed-19836795/ |
+| mau-07.jpg | Allen Boguslavsky | https://www.pexels.com/photo/a-fully-furnished-living-room-14505912/ |
+| mau-08.jpg | Curtis Adams | https://www.pexels.com/photo/living-room-with-white-sectional-sofa-6510974/ |
+| mau-09.jpg | Max Vakhtbovych | https://www.pexels.com/photo/modern-living-room-with-sofa-6438748/ |
+| mau-10.jpg | Max Vakhtbovych | https://www.pexels.com/photo/kitchen-and-bedroom-interior-in-modern-house-7045991/ |
+| mau-11.jpg | – | https://www.pexels.com/photo/interior-of-miniature-modern-apartment-with-furniture-6447390/ |
+| mau-12.jpg | – | https://www.pexels.com/photo/cozy-studio-apartment-design-8082559/ |
 
 Font **Be Vietnam Pro** dùng giấy phép SIL Open Font License 1.1 (`Content/fonts/OFL.txt`).

@@ -14,8 +14,8 @@ Tài liệu này hướng dẫn chụp từng hình trong **Chương 3** theo m�
 4. Khi chụp trang web: dùng Chrome/Edge, cửa sổ rộng khoảng 1366px, zoom 100%. Muốn chụp **cả trang dài** thì
    bấm **F12 → Ctrl+Shift+P → gõ "Capture full size screenshot"**.
 5. Số dòng dưới đây tính theo file trong repo (có thể lệch 1–2 dòng nếu bạn đã sửa code).
-6. Ảnh nhà hiện là **khung xám** (chưa có ảnh thật). Nên chép ảnh thật vào `RentHouseMVC/Content/images` trước khi
-   chụp kết quả – xem mục "Ảnh nhà" trong `README.md`.
+6. Ảnh nhà mẫu và ảnh đầu trang chủ đã là ảnh thật (Pexels). Nếu trang hiện ảnh cũ thì bấm **Ctrl+F5** để tải lại;
+   nguồn ảnh ghi ở mục "Ảnh nhà" trong `README.md`.
 
 ---
 
