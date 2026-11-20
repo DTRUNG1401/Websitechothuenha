@@ -121,7 +121,7 @@ Nếu ở Bước 4 bạn kết nối SSMS bằng tên server khác thì sửa p
 
 | Lỗi | Cách xử lý |
 |---|---|
-| `Could not find a part of the path '...\bin\roslyn\csc.exe'` | Do lần Build đầu vừa tải gói NuGet. Chọn **Build → Rebuild Solution** rồi chạy lại (hoặc đóng và mở lại Visual Studio). |
+| `Could not find a part of the path '...\bin\roslyn\csc.exe'` | Project đã có bước tự chép bộ biên dịch sau khi Build. Chọn **Build → Rebuild Solution** rồi F5 lại. Nếu vẫn lỗi: đóng hẳn Visual Studio, mở lại `RentHouseMVC.sln`, Rebuild. Cách thủ công: chép toàn bộ file trong `packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\tools\RoslynLatest\` vào thư mục `RentHouseMVC\bin\roslyn\` (tự tạo thư mục `roslyn` nếu chưa có). |
 | `This project references NuGet package(s) that are missing...` | Chuột phải Solution → **Restore NuGet Packages** → Build lại. Kiểm tra máy có Internet. |
 | Trang lỗi 500 với chi tiết *A network-related or instance-specific error... SQL Server* | Sai `Data Source` (Bước 5) hoặc dịch vụ SQL Server chưa chạy: mở `services.msc` → **SQL Server (SQLEXPRESS)** → *Start*. |
 | *Cannot open database "RentHouseDB" requested by the login* | Chưa chạy script SQL (Bước 4) hoặc đang kết nối nhầm server. |

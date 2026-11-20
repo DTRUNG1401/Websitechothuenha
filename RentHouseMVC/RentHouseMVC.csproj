@@ -271,4 +271,14 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
+  <!-- Dự phòng: ở lần Build đầu tiên, Visual Studio vừa tải gói NuGet nên chưa nạp file .props của
+       Microsoft.CodeDom.Providers.DotNetCompilerPlatform => bin\roslyn\csc.exe chưa được chép và web báo lỗi
+       "Could not find a part of the path ...\bin\roslyn\csc.exe". Target này tự chép bộ biên dịch nếu còn thiếu. -->
+  <Target Name="CopyRoslynCompilerIfMissing" AfterTargets="Build" Condition="!Exists('$(MSBuildProjectDirectory)\bin\roslyn\csc.exe')">
+    <ItemGroup>
+      <RoslynFallbackFiles Include="$(MSBuildProjectDirectory)\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\tools\RoslynLatest\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RoslynFallbackFiles)" DestinationFiles="@(RoslynFallbackFiles->'$(MSBuildProjectDirectory)\bin\roslyn\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Message Importance="high" Text="RentHouseMVC: đã chép bộ biên dịch Roslyn vào bin\roslyn." Condition="'@(RoslynFallbackFiles)' != ''" />
+  </Target>
 </Project>
